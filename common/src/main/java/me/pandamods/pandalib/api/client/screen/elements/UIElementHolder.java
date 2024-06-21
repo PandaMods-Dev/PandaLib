@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class UIElementHolder extends AbstractUIElement implements UIElementHolderAccessor, PLRenderable {
+public class UIElementHolder extends AbstractUIElement implements UIElementHolderAccessor, PLRenderable {
 	private final List<UIElement> children = new ArrayList<>();
 	private final List<NarratableEntry> narratables = new ArrayList<>();
 	private final List<UIElementHolder> holders = new ArrayList<>();

@@ -38,7 +38,7 @@ public class QuickListWidget extends UIElementHolder {
 		for (PLLayout element : elements) {
 			helper.addChild(element);
 		}
-		grid.quickArrange(this.getX(), this.getY());
+		grid.arrangeElements();
 		this.setSize(grid.getWidth(), grid.getHeight());
 	}
 

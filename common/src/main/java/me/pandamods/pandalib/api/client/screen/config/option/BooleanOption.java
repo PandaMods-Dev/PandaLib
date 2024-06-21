@@ -44,7 +44,7 @@ public class BooleanOption extends AbstractConfigOption<Boolean> {
 		grid.addChild(button, 0, 0);
 		addActionButtons(grid, 2);
 
-		grid.quickArrange(this.getX(), this.getY(), this.getWidth() - 5, this.getHeight(), 1f, 0.5f);
+		grid.arrangeElements();
 		super.init();
 	}
 }

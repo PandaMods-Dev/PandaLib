@@ -66,12 +66,12 @@ public abstract class AbstractUIElement implements UIElement, PLLayout {
 
 	@Override
 	public void setX(int x) {
-		setRelativeX(getParent().map(uiElement -> x - uiElement.getX() - uiElement.getChildOffsetX()).orElse(x));
+		setRelativeX(getParent().map(uiElement -> x - uiElement.getX()).orElse(x));
 	}
 
 	@Override
 	public void setY(int y) {
-		setRelativeY(getParent().map(uiElement -> y - uiElement.getY() - uiElement.getChildOffsetY()).orElse(y));
+		setRelativeY(getParent().map(uiElement -> y - uiElement.getY()).orElse(y));
 	}
 
 	@Override

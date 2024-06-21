@@ -13,7 +13,6 @@
 package me.pandamods.pandalib.api.client.screen.layouts;
 
 import com.mojang.math.Divisor;
-import me.pandamods.pandalib.api.client.screen.elements.UIElementHolder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Mth;
@@ -22,9 +21,11 @@ import org.joml.Math;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
-public class PLGrid extends UIElementHolder {
+public class PLGrid {
+	private final List<PLLayout> children = new ArrayList<>();
 	private final List<CellInhabitant> cellInhabitants = new ArrayList<>();
 	private final PLLayoutSettings defaultCellSettings = PLLayoutSettings.defaults();
 
@@ -61,22 +62,16 @@ public class PLGrid extends UIElementHolder {
 		return contentDeltaY;
 	}
 
-	public int getContentWidth() {
+	public int getWidth() {
 		return contentWidth;
 	}
 
-	public int getContentHeight() {
+	public int getHeight() {
 		return contentHeight;
 	}
 
-	@Override
-	public int getChildOffsetX() {
-		return (int) Math.lerp(0, this.getWidth() - this.contentWidth, this.getDeltaX());
-	}
-
-	@Override
-	public int getChildOffsetY() {
-		return (int) Math.lerp(0, this.getHeight() - this.contentHeight, this.getDeltaY());
+	public void visitChildren(Consumer<PLLayout> consumer) {
+		this.children.forEach(consumer);
 	}
 
 	public void arrangeElements() {
@@ -112,12 +107,12 @@ public class PLGrid extends UIElementHolder {
 		int[] columnOffSets = new int[maxOccupiedColumn + 1];
 		int[] rowOffSets = new int[maxOccupiedRow + 1];
 		columnOffSets[0] = 0;
-		for (int k = 1; k <= maxOccupiedColumn; ++k) {
-			columnOffSets[k] = columnOffSets[k - 1] + maxColumnWidths[k - 1] + this.columnSpacing;
+		for (int offset = 1; offset <= maxOccupiedColumn; ++offset) {
+			columnOffSets[offset] = columnOffSets[offset - 1] + maxColumnWidths[offset - 1] + this.columnSpacing;
 		}
 		rowOffSets[0] = 0;
-		for (int k = 1; k <= maxOccupiedRow; ++k) {
-			rowOffSets[k] = rowOffSets[k - 1] + maxRowHeights[k - 1] + this.rowSpacing;
+		for (int offset = 1; offset <= maxOccupiedRow; ++offset) {
+			rowOffSets[offset] = rowOffSets[offset - 1] + maxRowHeights[offset - 1] + this.rowSpacing;
 		}
 
 		// Adjust the position of each cell inhabitant
@@ -167,7 +162,6 @@ public class PLGrid extends UIElementHolder {
 		if (occupiedColumns < 1)
 			throw new IllegalArgumentException("Occupied columns must be at least 1");
 		this.cellInhabitants.add(new CellInhabitant(child, row, column, occupiedRows, occupiedColumns, layoutSettings));
-		this.addElement(child);
 
 		if (column >  this.columns)
 			this.columns = column;
@@ -176,6 +170,9 @@ public class PLGrid extends UIElementHolder {
 		return child;
 	}
 
+	public List<PLLayout> getChildren() {
+		return children;
+	}
 
 	public PLGrid columnSpacing(int columnSpacing) {
 		this.columnSpacing = columnSpacing;
@@ -201,17 +198,6 @@ public class PLGrid extends UIElementHolder {
 
 	public int getColumns() {
 		return columns;
-	}
-
-	public void quickArrange(int x, int y) {
-		this.arrangeElements();
-		this.setPosition(x, y);
-	}
-
-	public void quickArrange(int x, int y, int width, int height, float deltaX, float deltaY) {
-		this.quickArrange(x, y);
-		this.setSize(width, height);
-		this.setDelta(deltaX, deltaY);
 	}
 
 	public RowHelper createRowHelper(int columns) {

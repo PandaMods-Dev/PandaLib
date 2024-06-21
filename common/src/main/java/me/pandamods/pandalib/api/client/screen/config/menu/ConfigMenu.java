@@ -67,7 +67,7 @@ public class ConfigMenu<T extends ConfigData> extends PLScreen {
 	@Override
 	public void init() {
 		this.addressBar.setSize(this.getWidth(), 20);
-		this.addElement(this.addressBar);
+//		this.addElement(this.addressBar);
 
 		this.categoryList.setPosition(0, this.addressBar.getHeight());
 		this.categoryList.setSize(100, this.getHeight() - this.categoryList.getY());
@@ -75,9 +75,9 @@ public class ConfigMenu<T extends ConfigData> extends PLScreen {
 
 		this.category.setPosition(this.categoryList.getWidth(), this.addressBar.getHeight());
 		this.category.setSize(this.getWidth() - this.category.getX(), this.getHeight() - this.category.getY());
-		this.addElement(this.category);
+//		this.addElement(this.category);
 
-		PLGrid actionGrid = this.addElement(new PLGrid());
+		PLGrid actionGrid = new PLGrid();
 		actionGrid.spacing(4).defaultCellSetting();
 		PLGrid.ColumnHelper actionHelper = actionGrid.createColumnHelper(1);
 
@@ -85,7 +85,8 @@ public class ConfigMenu<T extends ConfigData> extends PLScreen {
 		actionHelper.addChild(PLButton.builder(PLCommonComponents.RESET, button -> this.reset()).width(50).build());
 		actionHelper.addChild(PLButton.builder(PLCommonComponents.CLOSE, button -> this.close()).width(50).build());
 
-		actionGrid.quickArrange(this.category.getX(), this.category.maxY() - 30, this.category.getWidth(), 30, 0.5f, 0.5f);
+		actionGrid.visitChildren(this::addElement);
+		actionGrid.arrangeElements();
 	}
 
 	@Override
@@ -130,7 +131,7 @@ public class ConfigMenu<T extends ConfigData> extends PLScreen {
 			for (AbstractConfigCategory category : ConfigMenu.this.getCategory().getCategories()) {
 				helper.addChild(PLButton.builder(category.getName(), button -> setCategory(category)).width(90).build());
 			}
-			grid.quickArrange(getX(), getY() + 5, this.getWidth(), this.getHeight() - 5, 0.5f, 0);
+			grid.arrangeElements();
 			super.init();
 		}
 
@@ -156,7 +157,7 @@ public class ConfigMenu<T extends ConfigData> extends PLScreen {
 			helper.addChild(PLSpacerElement.width(4));
 
 			addCategoryDist(helper, ConfigMenu.this.category);
-			grid.quickArrange(getX() + 4, getY(), this.getWidth() - 10, this.getHeight(), 0f, 0.5f);
+			grid.arrangeElements();
 			super.init();
 		}
 

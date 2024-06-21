@@ -51,7 +51,7 @@ public class DoubleOption extends AbstractConfigOption<Double> {
 
 		addActionButtons(grid, 2);
 
-		grid.quickArrange(this.getX(), this.getY(), this.getWidth() - 5, this.getHeight(), 1f, 0.5f);
+		grid.arrangeElements();
 		super.init();
 	}
 }

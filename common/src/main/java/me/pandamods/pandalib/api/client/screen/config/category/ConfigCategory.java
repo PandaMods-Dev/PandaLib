@@ -63,7 +63,7 @@ public class ConfigCategory extends AbstractConfigCategory {
 			rowHelper.addChild(option);
 			option.setWidth(this.getWidth());
 		}
-		grid.quickArrange(this.getX(), this.getY());
+		grid.arrangeElements();
 		contentHeight = grid.getHeight();
 		super.init();
 	}

@@ -14,12 +14,11 @@ package me.pandamods.pandalib.api.client.screen.elements;
 
 import me.pandamods.pandalib.api.utils.ScreenUtils;
 import me.pandamods.pandalib.api.utils.screen.PLGuiGraphics;
-import net.minecraft.client.gui.screens.Screen;
 import org.joml.Math;
 
 import java.awt.*;
 
-public abstract class ScrollableUIElementHolder extends UIElementHolder {
+public class ScrollPane extends UIElementHolder {
 	private static final int SCROLLBAR_BACKGROUND_COLOR = new Color(0, 0, 0, 150).getRGB();
 	private static final int SCROLLBAR_COLOR_DARK = new Color(100, 100, 100, 150).getRGB();
 	private static final int SCROLLBAR_COLOR = new Color(150, 150, 150, 150).getRGB();
@@ -33,8 +32,27 @@ public abstract class ScrollableUIElementHolder extends UIElementHolder {
 	private boolean scrollingX = false;
 	private boolean scrollingY = false;
 
-	public abstract int getContentWidth();
-	public abstract int getContentHeight();
+	private final UIElementHolder viewport;
+
+	public ScrollPane(UIElementHolder viewport) {
+		this.viewport = viewport;
+		this.viewport.setRelativeX(0);
+		this.viewport.setRelativeY(0);
+		this.viewport.setSize(this.getWidth(), this.getHeight());
+		this.addElement(viewport);
+	}
+
+	public UIElementHolder getViewport() {
+		return viewport;
+	}
+
+	public int getContentWidth() {
+		return viewport.getWidth();
+	}
+
+	public int getContentHeight() {
+		return viewport.getHeight();
+	}
 
 	public boolean isScrollbarXShown() {
 		return getContentWidth() > this.getWidth();
@@ -49,18 +67,11 @@ public abstract class ScrollableUIElementHolder extends UIElementHolder {
 		this.scrollYDistance = Math.clamp(0, getContentHeight() - this.getHeight(), scrollYDistance);
 	}
 
-//	@Override
-//	public int getChildOffsetX() {
-//		return (int) -scrollXDistance;
-//	}
-//
-//	@Override
-//	public int getChildOffsetY() {
-//		return (int) -scrollYDistance;
-//	}
-
 	@Override
 	public void render(PLGuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+		this.getViewport().setRelativeX((int) -scrollXDistance);
+		this.getViewport().setRelativeY((int) -scrollYDistance);
+
 		guiGraphics.enableScissor(minX(), minY(), maxX(), maxY());
 //		guiGraphics.pose().pushPose();
 //		guiGraphics.pose().translate(getChildOffsetX(), getChildOffsetY(), 0);

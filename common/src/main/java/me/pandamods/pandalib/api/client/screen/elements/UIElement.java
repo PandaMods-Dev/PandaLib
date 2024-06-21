@@ -26,17 +26,10 @@ public interface UIElement extends GuiEventListener {
 	void setParent(UIElement parent);
 
 	default int getX() {
-		return getParent().map(uiElement -> uiElement.getChildOffsetX() + uiElement.getX() + getRelativeX()).orElse(getRelativeX());
+		return getParent().map(uiElement -> uiElement.getX() + getRelativeX()).orElse(getRelativeX());
 	}
 	default int getY() {
-		return getParent().map(uiElement -> uiElement.getChildOffsetY() + uiElement.getY() + getRelativeY()).orElse(getRelativeY());
-	}
-
-	default int getChildOffsetX() {
-		return 0;
-	}
-	default int getChildOffsetY() {
-		return 0;
+		return getParent().map(uiElement -> uiElement.getY() + getRelativeY()).orElse(getRelativeY());
 	}
 
 	int getRelativeX();
