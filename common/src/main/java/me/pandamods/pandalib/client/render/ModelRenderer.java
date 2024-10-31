@@ -104,45 +104,7 @@ public class ModelRenderer {
 		}
 	}
 
+	@Deprecated()
 	public static void renderModelDebug(Model model, PoseStack poseStack, MultiBufferSource bufferSource) {
-		model.getNodes().forEach(node -> renderNodeDebug(node, poseStack, bufferSource));
-	}
-
-	private static void renderNodeDebug(Node node, PoseStack poseStack, MultiBufferSource bufferSource) {
-		poseStack.pushPose();
-		poseStack.mulPoseMatrix(node.getGlobalTransform());
-
-		float length = 0.9f;
-
-		VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.debugLineStrip(1));
-
-		vertexConsumer.vertex(poseStack.last().pose(), 0, 0, 0);
-		vertexConsumer.color(Color.green.getRGB());
-		vertexConsumer.endVertex();
-
-		vertexConsumer.vertex(poseStack.last().pose(), 0, length, 0);
-		vertexConsumer.color(Color.green.getRGB());
-		vertexConsumer.endVertex();
-
-		vertexConsumer = bufferSource.getBuffer(RenderType.debugLineStrip(1));
-
-		vertexConsumer.vertex(poseStack.last().pose(), 0, 0, 0);
-		vertexConsumer.color(Color.red.getRGB());
-		vertexConsumer.endVertex();
-
-		vertexConsumer.vertex(poseStack.last().pose(), length, 0, 0);
-		vertexConsumer.color(Color.red.getRGB());
-		vertexConsumer.endVertex();
-
-		vertexConsumer = bufferSource.getBuffer(RenderType.debugLineStrip(1));
-
-		vertexConsumer.vertex(poseStack.last().pose(), 0, 0, 0);
-		vertexConsumer.color(Color.blue.getRGB());
-		vertexConsumer.endVertex();
-
-		vertexConsumer.vertex(poseStack.last().pose(), 0, 0, length);
-		vertexConsumer.color(Color.blue.getRGB());
-		vertexConsumer.endVertex();
-		poseStack.popPose();
 	}
 }

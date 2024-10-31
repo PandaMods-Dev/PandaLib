@@ -13,24 +13,25 @@
 package me.pandamods.pandalib.utils;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
+import com.mojang.math.Quaternion;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import org.joml.Math;
 
 public class BlockUtils {
 	public static void translateBlock(BlockState blockState, PoseStack poseStack) {
 		poseStack.translate(0.5f, 0.5f, 0.5f);
 		float direction = getYRotation(blockState);
-		poseStack.mulPose(Axis.YP.rotationDegrees(direction));
+		poseStack.mulPose(Quaternion.fromXYZ(0, Math.toRadians(direction), 0));
 		
 		if (blockState.hasProperty(BlockStateProperties.ATTACH_FACE)) {
 			AttachFace face = blockState.getValue(BlockStateProperties.ATTACH_FACE);
 			switch (face) {
-				case CEILING -> poseStack.mulPose(Axis.XP.rotationDegrees(180));
-				case WALL -> poseStack.mulPose(Axis.XP.rotationDegrees(90));
+				case CEILING -> poseStack.mulPose(Quaternion.fromXYZ(org.joml.Math.toRadians(180), 0, 0));
+				case WALL -> poseStack.mulPose(Quaternion.fromXYZ(Math.toRadians(90), 0, 0));
 			}
 		}
 		poseStack.translate(0, -0.5f, 0);
