@@ -12,11 +12,6 @@
 
 package me.pandamods.pandalib;
 
-import me.pandamods.pandalib.config.Config;
-import me.pandamods.pandalib.config.ConfigData;
-import me.pandamods.pandalib.config.PandaLibConfig;
-import me.pandamods.pandalib.config.holders.ClientConfigHolder;
-import me.pandamods.pandalib.config.holders.CommonConfigHolder;
 import me.pandamods.pandalib.core.event.EventHandler;
 import me.pandamods.pandalib.core.network.ConfigNetworking;
 import net.minecraft.resources.ResourceLocation;
@@ -33,7 +28,7 @@ public class PandaLib {
     }
 
 	public static ResourceLocation resourceLocation(String path) {
-		return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+		return new ResourceLocation(MOD_ID, path);
 	}
 
 //	@Config(modId = MOD_ID, synchronize = true, name = "test")

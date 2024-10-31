@@ -25,10 +25,8 @@ public class PandaLibNeoForge {
     public PandaLibNeoForge(IEventBus eventBus) {
 		eventBus.addListener(PandaLibNeoForge::commonSetup);
 
-		#if MC_VER < MC_1_21
 		if (Platform.getEnvironment().equals(Env.CLIENT))
 			new PandaLibClientNeoForge(eventBus);
-		#endif
     }
 
 	public static void commonSetup(FMLCommonSetupEvent event) {

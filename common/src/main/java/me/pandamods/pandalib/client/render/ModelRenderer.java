@@ -94,12 +94,13 @@ public class ModelRenderer {
 			}
 
 			vertexConsumer
-					.addVertex(poseStack.last(), position.x(), position.y(), position.z())
-					.setColor(1f, 1f, 1f, 1f)
-					.setUv(uvCoords.x(), uvCoords.y())
-					.setOverlay(overlayUV)
-					.setLight(lightmapUV)
-					.setNormal(poseStack.last(), normal.x(), normal.y(), normal.z());
+					.vertex(poseStack.last(), position.x(), position.y(), position.z())
+					.color(1f, 1f, 1f, 1f)
+					.uv(uvCoords.x(), uvCoords.y())
+					.overlayCoords(overlayUV)
+					.uv2(lightmapUV)
+					.normal(poseStack.last(), normal.x(), normal.y(), normal.z())
+					.endVertex();
 		}
 	}
 
@@ -115,27 +116,33 @@ public class ModelRenderer {
 
 		VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.debugLineStrip(1));
 
-		vertexConsumer.addVertex(poseStack.last(), 0, 0, 0);
-		vertexConsumer.setColor(Color.green.getRGB());
+		vertexConsumer.vertex(poseStack.last().pose(), 0, 0, 0);
+		vertexConsumer.color(Color.green.getRGB());
+		vertexConsumer.endVertex();
 
-		vertexConsumer.addVertex(poseStack.last(), 0, length, 0);
-		vertexConsumer.setColor(Color.green.getRGB());
-
-		vertexConsumer = bufferSource.getBuffer(RenderType.debugLineStrip(1));
-
-		vertexConsumer.addVertex(poseStack.last(), 0, 0, 0);
-		vertexConsumer.setColor(Color.red.getRGB());
-
-		vertexConsumer.addVertex(poseStack.last(), length, 0, 0);
-		vertexConsumer.setColor(Color.red.getRGB());
+		vertexConsumer.vertex(poseStack.last().pose(), 0, length, 0);
+		vertexConsumer.color(Color.green.getRGB());
+		vertexConsumer.endVertex();
 
 		vertexConsumer = bufferSource.getBuffer(RenderType.debugLineStrip(1));
 
-		vertexConsumer.addVertex(poseStack.last(), 0, 0, 0);
-		vertexConsumer.setColor(Color.blue.getRGB());
+		vertexConsumer.vertex(poseStack.last().pose(), 0, 0, 0);
+		vertexConsumer.color(Color.red.getRGB());
+		vertexConsumer.endVertex();
 
-		vertexConsumer.addVertex(poseStack.last(), 0, 0, length);
-		vertexConsumer.setColor(Color.blue.getRGB());
+		vertexConsumer.vertex(poseStack.last().pose(), length, 0, 0);
+		vertexConsumer.color(Color.red.getRGB());
+		vertexConsumer.endVertex();
+
+		vertexConsumer = bufferSource.getBuffer(RenderType.debugLineStrip(1));
+
+		vertexConsumer.vertex(poseStack.last().pose(), 0, 0, 0);
+		vertexConsumer.color(Color.blue.getRGB());
+		vertexConsumer.endVertex();
+
+		vertexConsumer.vertex(poseStack.last().pose(), 0, 0, length);
+		vertexConsumer.color(Color.blue.getRGB());
+		vertexConsumer.endVertex();
 		poseStack.popPose();
 	}
 }

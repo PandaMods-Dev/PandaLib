@@ -43,7 +43,7 @@ public class ConfigHolder<T extends ConfigData> {
 		this.logger = LoggerFactory.getLogger(config.modId() + " | Config");
 		this.gson = getNewDefault().buildGson(new GsonBuilder()).setPrettyPrinting().create();
 
-		this.resourceLocation = ResourceLocation.fromNamespaceAndPath(config.modId(), config.name());
+		this.resourceLocation = new ResourceLocation(config.modId(), config.name());
 		this.synchronize = config.synchronize();
 
 		if (this.load()) {
