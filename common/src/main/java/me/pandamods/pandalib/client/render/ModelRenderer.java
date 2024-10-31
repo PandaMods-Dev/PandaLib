@@ -94,12 +94,12 @@ public class ModelRenderer {
 			}
 
 			vertexConsumer
-					.vertex(poseStack.last(), position.x(), position.y(), position.z())
+					.vertex(poseStack.last().pose(), position.x(), position.y(), position.z())
 					.color(1f, 1f, 1f, 1f)
 					.uv(uvCoords.x(), uvCoords.y())
 					.overlayCoords(overlayUV)
 					.uv2(lightmapUV)
-					.normal(poseStack.last(), normal.x(), normal.y(), normal.z())
+					.normal(poseStack.last().normal(), normal.x(), normal.y(), normal.z())
 					.endVertex();
 		}
 	}
@@ -110,7 +110,7 @@ public class ModelRenderer {
 
 	private static void renderNodeDebug(Node node, PoseStack poseStack, MultiBufferSource bufferSource) {
 		poseStack.pushPose();
-		poseStack.mulPose(node.getGlobalTransform());
+		poseStack.mulPoseMatrix(node.getGlobalTransform());
 
 		float length = 0.9f;
 

@@ -10,20 +10,12 @@
  *  along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.pandamods.pandalib.neoforge;
+package me.pandamods.pandalib.forge.client;
 
-import me.pandamods.pandalib.PandaLib;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import me.pandamods.pandalib.client.PandaLibClient;
 
-@Mod(PandaLib.MOD_ID)
-public class PandaLibNeoForge {
-    public PandaLibNeoForge(IEventBus eventBus) {
-		eventBus.addListener(PandaLibNeoForge::commonSetup);
+public class PandaLibClientForge {
+    public PandaLibClientForge() {
+		PandaLibClient.init();
     }
-
-	public static void commonSetup(FMLCommonSetupEvent event) {
-		PandaLib.init();
-	}
 }
