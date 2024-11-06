@@ -134,19 +134,14 @@ subprojects {
 
 	if (isMinecraftSubProject) {
 		tasks.withType<ShadowJar> {
-			configurations = listOf(project.configurations.getByName("shadowBundle"), project.configurations.getByName("jarShadow"))
-			archiveClassifier.set("dev-shadow")
-
 			exclude("architectury.common.json")
-		}
-
-		tasks.withType<RemapJarTask> {
-			val shadowJar = tasks.getByName<ShadowJar>("shadowJar")
-			inputFile.set(shadowJar.archiveFile)
 		}
 	}
 
 	tasks.withType<ShadowJar> {
+		configurations = listOf(project.configurations.getByName("shadowBundle"), project.configurations.getByName("jarShadow"))
+		archiveClassifier.set("dev-shadow")
+
 		// Relocate assimp so it will not cause any conflicts with other mods also using it.
 		relocate("org.lwjgl.assimp", "${properties["maven_group"]}.assimp")
 		// Relocate natives
