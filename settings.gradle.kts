@@ -1,6 +1,3 @@
-import java.io.FileInputStream
-import java.util.*
-
 pluginManagement.repositories {
 	maven {
 		name = "Architectury"
