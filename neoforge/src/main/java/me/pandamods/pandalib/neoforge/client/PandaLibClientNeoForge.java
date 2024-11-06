@@ -19,8 +19,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 
-
-@Mod(value = PandaLib.MOD_ID, dist = Dist.CLIENT)
 public class PandaLibClientNeoForge {
     public PandaLibClientNeoForge(IEventBus eventBus) {
 		eventBus.addListener(PandaLibClientNeoForge::clientSetup);

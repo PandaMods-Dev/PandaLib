@@ -13,14 +13,17 @@
 package me.pandamods.pandalib.neoforge;
 
 import me.pandamods.pandalib.PandaLib;
+import me.pandamods.pandalib.neoforge.client.PandaLibClientNeoForge;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 
 @Mod(PandaLib.MOD_ID)
 public class PandaLibNeoForge {
     public PandaLibNeoForge(IEventBus eventBus) {
 		eventBus.addListener(PandaLibNeoForge::commonSetup);
+		eventBus.addListener(FMLClientSetupEvent.class, event -> new PandaLibClientNeoForge(eventBus));
     }
 
 	public static void commonSetup(FMLCommonSetupEvent event) {
