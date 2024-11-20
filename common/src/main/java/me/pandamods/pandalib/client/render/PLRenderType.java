@@ -17,7 +17,6 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.Util;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.TriState;
 
 import java.util.function.Function;
 
@@ -25,7 +24,7 @@ public class PLRenderType extends RenderType {
 	public static final Function<ResourceLocation, RenderType> CUTOUT_MESH_ENTITY = Util.memoize((resourceLocation) -> {
 		CompositeState compositeState = CompositeState.builder()
 				.setShaderState(RENDERTYPE_ENTITY_CUTOUT_SHADER)
-				.setTextureState(new TextureStateShard(resourceLocation, TriState.FALSE, false))
+				.setTextureState(new TextureStateShard(resourceLocation, false, false))
 				.setTransparencyState(NO_TRANSPARENCY).setLightmapState(LIGHTMAP).setOverlayState(OVERLAY)
 				.createCompositeState(true);
 		return create("cutout_mesh_entity", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.TRIANGLES, 1536,
