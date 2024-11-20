@@ -47,7 +47,7 @@ public class NetworkingRegistryImpl implements NetworkingRegistry {
 
 		@Override
 		public void receive(T payload, ClientPlayNetworking.Context context) {
-			NetworkContext networkContext = new NetworkContext(context.player());
+			NetworkContext networkContext = new NetworkContext(context.player(), Env.CLIENT);
 			receiver.receive(networkContext, payload);
 		}
 	}
@@ -57,7 +57,7 @@ public class NetworkingRegistryImpl implements NetworkingRegistry {
 																	   StreamCodec<? super RegistryFriendlyByteBuf, T> codec,
 																	   NetworkReceiver<T> receiver) {
 		PayloadTypeRegistry.playC2S().register(type, codec);
-		ServerPlayNetworking.registerGlobalReceiver(type, (t, context) -> receiver.receive(new NetworkContext(context.player()), t));
+		ServerPlayNetworking.registerGlobalReceiver(type, (t, context) -> receiver.receive(new NetworkContext(context.player(), Env.SERVER), t));
 	}
 
 	@Override
