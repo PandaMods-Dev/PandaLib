@@ -14,18 +14,19 @@ package me.pandamods.pandalib.core.network;
 import me.pandamods.pandalib.core.network.packets.ConfigPacketData;
 import me.pandamods.pandalib.utils.NBTUtils;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 
-public class ConfigCodec implements StreamCodec<FriendlyByteBuf, ConfigPacketData> {
+public class ConfigCodec implements StreamCodec<RegistryFriendlyByteBuf, ConfigPacketData> {
 	public static final ConfigCodec INSTANCE = new ConfigCodec();
 
 	@Override
-	public ConfigPacketData decode(FriendlyByteBuf byteBuf) {
+	public ConfigPacketData decode(RegistryFriendlyByteBuf byteBuf) {
 		return new ConfigPacketData(byteBuf.readResourceLocation(), NBTUtils.convertTagToJson(byteBuf.readNbt()));
 	}
 
 	@Override
-	public void encode(FriendlyByteBuf byteBuf, ConfigPacketData packetData) {
+	public void encode(RegistryFriendlyByteBuf byteBuf, ConfigPacketData packetData) {
 		byteBuf.writeResourceLocation(packetData.resourceLocation());
 		byteBuf.writeNbt(NBTUtils.convertJsonToTag(packetData.data()));
 	}
