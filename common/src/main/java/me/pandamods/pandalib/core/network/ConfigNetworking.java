@@ -12,27 +12,27 @@
 
 package me.pandamods.pandalib.core.network;
 
-import dev.architectury.networking.NetworkManager;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import io.netty.buffer.Unpooled;
-import me.pandamods.pandalib.PandaLib;
 import me.pandamods.pandalib.config.ConfigData;
 import me.pandamods.pandalib.config.PandaLibConfig;
 import me.pandamods.pandalib.config.holders.ClientConfigHolder;
 import me.pandamods.pandalib.config.holders.CommonConfigHolder;
+import me.pandamods.pandalib.networking.NetworkContext;
+import me.pandamods.pandalib.networking.NetworkingRegistry;
+import me.pandamods.pandalib.networking.PacketDistributor;
 import me.pandamods.pandalib.utils.NBTUtils;
-import me.pandamods.pandalib.utils.NetworkHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
 public class ConfigNetworking {
-	public static final ResourceLocation CONFIG_PACKET = PandaLib.resourceLocation("config_sync");
+	public static final ResourceLocation PACKET_ID = new ResourceLocation("pandalib", "config_sync");
 
-	public static void registerPackets() {
-		NetworkHelper.registerS2C(CONFIG_PACKET, ConfigNetworking::CommonConfigReceiver);
-
-		NetworkHelper.registerC2S(CONFIG_PACKET, ConfigNetworking::ClientConfigReceiver);
+	public static void registerPackets(NetworkingRegistry registry) {
+		registry.registerBiDirectionalReceiver(PACKET_ID, ConfigNetworking::CommonConfigReceiver, ConfigNetworking::ClientConfigReceiver);
 	}
 
 	public static void SyncCommonConfigs(ServerPlayer serverPlayer) {
@@ -46,7 +46,7 @@ public class ConfigNetworking {
 		FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
 		byteBuf.writeResourceLocation(holder.resourceLocation());
 		byteBuf.writeNbt((CompoundTag) NBTUtils.convertJsonToTag(holder.getGson().toJsonTree(holder.get())));
-		NetworkManager.sendToPlayer(serverPlayer, CONFIG_PACKET, byteBuf);
+		PacketDistributor.sendToPlayer(serverPlayer, PACKET_ID, byteBuf);
 	}
 
 	public static void SyncClientConfigs() {
@@ -60,28 +60,29 @@ public class ConfigNetworking {
 		FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
 		byteBuf.writeResourceLocation(holder.resourceLocation());
 		byteBuf.writeNbt((CompoundTag) NBTUtils.convertJsonToTag(holder.getGson().toJsonTree(holder.get())));
-		NetworkManager.sendToServer(CONFIG_PACKET, byteBuf);
+		PacketDistributor.sendToServer(PACKET_ID, byteBuf);
 	}
 
-	private static void ClientConfigReceiver(FriendlyByteBuf buf, NetworkManager.PacketContext context) {
-		ResourceLocation resourceLocation = buf.readResourceLocation();
+	private static void ClientConfigReceiver(NetworkContext ctx, FriendlyByteBuf byteBuf) {
+		ResourceLocation resourceLocation = byteBuf.readResourceLocation();
 		PandaLibConfig.getConfig(resourceLocation).ifPresent(configHolder -> {
 			if (configHolder instanceof ClientConfigHolder<? extends ConfigData> clientConfigHolder) {
 				configHolder.logger.info("Received client config '{}' from {}",
-						configHolder.resourceLocation().toString(), context.getPlayer().getDisplayName().getString());
-				clientConfigHolder.putConfig(context.getPlayer(),
-						configHolder.getGson().fromJson(NBTUtils.convertTagToJson(buf.readNbt()), configHolder.getConfigClass()));
+						configHolder.resourceLocation().toString(), ctx.getPlayer().getDisplayName().getString());
+				JsonElement configJson = NBTUtils.convertTagToJson(byteBuf.readNbt());
+				clientConfigHolder.putConfig(ctx.getPlayer(), configHolder.getGson()
+						.fromJson(configJson, configHolder.getConfigClass()));
 			}
 		});
 	}
 
-	private static void CommonConfigReceiver(FriendlyByteBuf buf, NetworkManager.PacketContext context) {
-		ResourceLocation resourceLocation = buf.readResourceLocation();
+	private static void CommonConfigReceiver(NetworkContext ctx, FriendlyByteBuf byteBuf) {
+		ResourceLocation resourceLocation = byteBuf.readResourceLocation() ;
 		PandaLibConfig.getConfig(resourceLocation).ifPresent(configHolder -> {
 			if (configHolder instanceof CommonConfigHolder<? extends ConfigData> commonConfigHolder) {
 				configHolder.logger.info("Received common config '{}' from server", configHolder.resourceLocation().toString());
-				commonConfigHolder.setCommonConfig(
-						configHolder.getGson().fromJson(NBTUtils.convertTagToJson(buf.readNbt()), configHolder.getConfigClass()));
+				JsonElement configJson = NBTUtils.convertTagToJson(byteBuf.readNbt());
+				commonConfigHolder.setCommonConfig(configHolder.getGson().fromJson(configJson, configHolder.getConfigClass()));
 			}
 		});
 	}
