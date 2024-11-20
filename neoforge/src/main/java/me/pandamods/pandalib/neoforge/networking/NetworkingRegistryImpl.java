@@ -13,6 +13,7 @@
 package me.pandamods.pandalib.neoforge.networking;
 
 import dev.architectury.platform.Platform;
+import dev.architectury.utils.Env;
 import me.pandamods.pandalib.event.events.NetworkingEvents;
 import me.pandamods.pandalib.networking.NetworkContext;
 import me.pandamods.pandalib.networking.NetworkReceiver;
@@ -34,14 +35,14 @@ public class NetworkingRegistryImpl extends PayloadRegistrar implements Networki
 	public <T extends CustomPacketPayload> void registerClientReceiver(CustomPacketPayload.Type<T> type,
 																	   StreamCodec<? super RegistryFriendlyByteBuf, T> codec,
 																	   NetworkReceiver<T> receiver) {
-		this.playToClient(type, codec, (arg, ctx) -> receiver.receive(new NetworkContext(ctx.player()), arg));
+		this.playToClient(type, codec, (arg, ctx) -> receiver.receive(new NetworkContext(ctx.player(), Env.CLIENT), arg));
 	}
 
 	@Override
 	public <T extends CustomPacketPayload> void registerServerReceiver(CustomPacketPayload.Type<T> type,
 																	   StreamCodec<? super RegistryFriendlyByteBuf, T> codec,
 																	   NetworkReceiver<T> receiver) {
-		this.playToServer(type, codec, (arg, ctx) -> receiver.receive(new NetworkContext(ctx.player()), arg));
+		this.playToServer(type, codec, (arg, ctx) -> receiver.receive(new NetworkContext(ctx.player(), Env.SERVER), arg));
 	}
 
 	@Override
@@ -50,8 +51,8 @@ public class NetworkingRegistryImpl extends PayloadRegistrar implements Networki
 																			  NetworkReceiver<T> clientReceiver,
 																			  NetworkReceiver<T> serverReceiver) {
 		this.playBidirectional(type, codec, new DirectionalPayloadHandler<>(
-				(arg, ctx) -> clientReceiver.receive(new NetworkContext(ctx.player()), arg),
-				(arg, ctx) -> serverReceiver.receive(new NetworkContext(ctx.player()), arg)
+				(arg, ctx) -> clientReceiver.receive(new NetworkContext(ctx.player(), Env.CLIENT), arg),
+				(arg, ctx) -> serverReceiver.receive(new NetworkContext(ctx.player(), Env.SERVER), arg)
 		));
 	}
 
