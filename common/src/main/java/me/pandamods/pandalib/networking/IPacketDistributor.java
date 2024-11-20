@@ -12,13 +12,14 @@
 
 package me.pandamods.pandalib.networking;
 
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
 public interface IPacketDistributor {
-	<T extends CustomPacketPayload> void sendToServer(T payload);
+	void sendToServer(ResourceLocation resourceLocation, FriendlyByteBuf byteBuf);
 
-	<T extends CustomPacketPayload> void sendToPlayer(ServerPlayer player, T payload);
+	void sendToPlayer(ServerPlayer player, ResourceLocation resourceLocation, FriendlyByteBuf byteBuf);
 
-	<T extends CustomPacketPayload> void sendToAllPlayers(T payload);
+	void sendToAllPlayers(ResourceLocation resourceLocation, FriendlyByteBuf byteBuf);
 }

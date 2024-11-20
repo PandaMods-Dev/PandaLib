@@ -12,21 +12,16 @@
 
 package me.pandamods.pandalib.networking;
 
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 
 public interface NetworkingRegistry {
-	<T extends CustomPacketPayload> void registerClientReceiver(CustomPacketPayload.Type<T> type,
-																StreamCodec<? super RegistryFriendlyByteBuf, T> codec,
-																NetworkReceiver<T> receiver);
+	void registerClientReceiver(ResourceLocation resourceLocation,
+								NetworkReceiver receiver);
 
-	<T extends CustomPacketPayload> void registerServerReceiver(CustomPacketPayload.Type<T> type,
-																StreamCodec<? super RegistryFriendlyByteBuf, T> codec,
-																NetworkReceiver<T> receiver);
+	void registerServerReceiver(ResourceLocation resourceLocation,
+								NetworkReceiver receiver);
 
-	<T extends CustomPacketPayload> void registerBiDirectionalReceiver(CustomPacketPayload.Type<T> type,
-																	   StreamCodec<? super RegistryFriendlyByteBuf, T> codec,
-																	   NetworkReceiver<T> clientReceiver,
-																	   NetworkReceiver<T> serverReceiver);
+	void registerBiDirectionalReceiver(ResourceLocation resourceLocation,
+									   NetworkReceiver clientReceiver,
+									   NetworkReceiver serverReceiver);
 }

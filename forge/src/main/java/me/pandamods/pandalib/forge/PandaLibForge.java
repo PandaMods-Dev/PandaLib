@@ -14,18 +14,25 @@ package me.pandamods.pandalib.forge;
 
 import dev.architectury.platform.forge.EventBuses;
 import me.pandamods.pandalib.PandaLib;
+import me.pandamods.pandalib.event.events.NetworkingEvents;
 import me.pandamods.pandalib.forge.client.PandaLibClientForge;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
+import me.pandamods.pandalib.forge.networking.NetworkingRegistryImpl;
+import me.pandamods.pandalib.forge.networking.PacketDistributorImpl;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod(PandaLib.MOD_ID)
 public class PandaLibForge {
-    public PandaLibForge() {
+    public PandaLibForge(IEventBus eventBus) {
 		EventBuses.registerModEventBus(PandaLib.MOD_ID, FMLJavaModLoadingContext.get().getModEventBus());
-		PandaLib.init();
-
-		DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> PandaLibClientForge::new);
+		eventBus.addListener(PandaLibForge::commonSetup);
+		eventBus.addListener(PandaLibClientForge::clientSetup);
+		NetworkingEvents.PACKET_PAYLOAD_REGISTRY.invoker().register(new NetworkingRegistryImpl());
     }
+
+	public static void commonSetup(final FMLCommonSetupEvent event) {
+		new PandaLib(new PacketDistributorImpl());
+	}
 }

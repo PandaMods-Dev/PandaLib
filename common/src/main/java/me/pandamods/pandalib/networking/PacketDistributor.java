@@ -13,19 +13,20 @@
 package me.pandamods.pandalib.networking;
 
 import me.pandamods.pandalib.PandaLib;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
 public class PacketDistributor {
-	public static <T extends CustomPacketPayload> void sendToServer(T payload) {
-		PandaLib.getInstance().packetDistributor.sendToServer(payload);
+	public static void sendToServer(ResourceLocation resourceLocation, FriendlyByteBuf byteBuf) {
+		PandaLib.getInstance().packetDistributor.sendToServer(resourceLocation, byteBuf);
 	}
 
-	public static <T extends CustomPacketPayload> void sendToPlayer(ServerPlayer player, T payload) {
-		PandaLib.getInstance().packetDistributor.sendToPlayer(player, payload);
+	public static void sendToPlayer(ServerPlayer player, ResourceLocation resourceLocation, FriendlyByteBuf byteBuf) {
+		PandaLib.getInstance().packetDistributor.sendToPlayer(player, resourceLocation, byteBuf);
 	}
 
-	public static <T extends CustomPacketPayload> void sendToAllPlayers(T payload) {
-		PandaLib.getInstance().packetDistributor.sendToAllPlayers(payload);
+	public static void sendToAllPlayers(ResourceLocation resourceLocation, FriendlyByteBuf byteBuf) {
+		PandaLib.getInstance().packetDistributor.sendToAllPlayers(resourceLocation, byteBuf);
 	}
 }

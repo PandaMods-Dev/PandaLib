@@ -20,52 +20,51 @@ import me.pandamods.pandalib.networking.NetworkingRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 
 public class NetworkingRegistryImpl implements NetworkingRegistry {
 	@Override
 	@Environment(EnvType.CLIENT)
-	public <T extends CustomPacketPayload> void registerClientReceiver(CustomPacketPayload.Type<T> type,
-																	   StreamCodec<? super RegistryFriendlyByteBuf, T> codec,
-																	   NetworkReceiver<T> receiver) {
-		PayloadTypeRegistry.playS2C().register(type, codec);
-		ClientPlayNetworking.registerGlobalReceiver(type, new ClientPlayPayloadHandler<>(receiver));
+	public void registerClientReceiver(ResourceLocation resourceLocation,
+									   NetworkReceiver receiver) {
+		ClientPlayNetworking.registerGlobalReceiver(resourceLocation, new ClientPlayChannelHandler(receiver));
 	}
 
 	@Environment(EnvType.CLIENT)
-	private static class ClientPlayPayloadHandler<T extends CustomPacketPayload> implements ClientPlayNetworking.PlayPayloadHandler<T> {
-		private final NetworkReceiver<T> receiver;
+	private static class ClientPlayChannelHandler implements ClientPlayNetworking.PlayChannelHandler {
+		private final NetworkReceiver receiver;
 
-		ClientPlayPayloadHandler(NetworkReceiver<T> receiver) {
+		ClientPlayChannelHandler(NetworkReceiver receiver) {
 			this.receiver = receiver;
 		}
 
 		@Override
-		public void receive(T payload, ClientPlayNetworking.Context context) {
-			NetworkContext networkContext = new NetworkContext(context.player());
-			receiver.receive(networkContext, payload);
+		public void receive(Minecraft minecraft, ClientPacketListener clientPacketListener, FriendlyByteBuf friendlyByteBuf, PacketSender packetSender) {
+			NetworkContext networkContext = new NetworkContext(minecraft.player);
+			receiver.receive(networkContext, friendlyByteBuf);
 		}
 	}
 
 	@Override
-	public <T extends CustomPacketPayload> void registerServerReceiver(CustomPacketPayload.Type<T> type,
-																	   StreamCodec<? super RegistryFriendlyByteBuf, T> codec,
-																	   NetworkReceiver<T> receiver) {
-		PayloadTypeRegistry.playC2S().register(type, codec);
-		ServerPlayNetworking.registerGlobalReceiver(type, (t, context) -> receiver.receive(new NetworkContext(context.player()), t));
+	public void registerServerReceiver(ResourceLocation resourceLocation,
+									   NetworkReceiver receiver) {
+		ServerPlayNetworking.registerGlobalReceiver(resourceLocation, (minecraftServer, serverPlayer,
+																	   serverGamePacketListener, friendlyByteBuf,
+																	   packetSender) ->
+				receiver.receive(new NetworkContext(serverPlayer), friendlyByteBuf));
 	}
 
 	@Override
-	public <T extends CustomPacketPayload> void registerBiDirectionalReceiver(CustomPacketPayload.Type<T> type,
-																			  StreamCodec<? super RegistryFriendlyByteBuf, T> codec,
-																			  NetworkReceiver<T> clientReceiver, NetworkReceiver<T> serverReceiver) {
-		registerServerReceiver(type, codec, serverReceiver);
+	public void registerBiDirectionalReceiver(ResourceLocation resourceLocation,
+											  NetworkReceiver clientReceiver,
+											  NetworkReceiver serverReceiver) {
+		registerServerReceiver(resourceLocation, serverReceiver);
 		if (Platform.getEnvironment() == Env.CLIENT)
-			registerClientReceiver(type, codec, clientReceiver);
+			registerClientReceiver(resourceLocation, clientReceiver);
 	}
 }

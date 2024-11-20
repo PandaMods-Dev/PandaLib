@@ -16,24 +16,25 @@ import me.pandamods.pandalib.fabric.PandaLibFabric;
 import me.pandamods.pandalib.networking.IPacketDistributor;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
 public class PacketDistributorImpl implements IPacketDistributor {
 	@Override
-	public <T extends CustomPacketPayload> void sendToServer(T payload) {
-		ClientPlayNetworking.send(payload);
+	public void sendToServer(ResourceLocation resourceLocation, FriendlyByteBuf byteBuf) {
+		ClientPlayNetworking.send(resourceLocation, byteBuf);
 	}
 
 	@Override
-	public <T extends CustomPacketPayload> void sendToPlayer(ServerPlayer player, T payload) {
-		ServerPlayNetworking.send(player, payload);
+	public void sendToPlayer(ServerPlayer player, ResourceLocation resourceLocation, FriendlyByteBuf byteBuf) {
+		ServerPlayNetworking.send(player, resourceLocation, byteBuf);
 	}
 
 	@Override
-	public <T extends CustomPacketPayload> void sendToAllPlayers(T payload) {
+	public void sendToAllPlayers(ResourceLocation resourceLocation, FriendlyByteBuf byteBuf) {
 		for (ServerPlayer player : PandaLibFabric.server.getPlayerList().getPlayers()) {
-			sendToPlayer(player, payload);
+			sendToPlayer(player, resourceLocation, byteBuf);
 		}
 	}
 }

@@ -12,8 +12,8 @@
 
 package me.pandamods.pandalib.networking;
 
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.network.FriendlyByteBuf;
 
-public interface NetworkReceiver<T extends CustomPacketPayload> {
-	void receive(NetworkContext ctx, T t);
+public interface NetworkReceiver {
+	void receive(NetworkContext ctx, FriendlyByteBuf byteBuf);
 }
