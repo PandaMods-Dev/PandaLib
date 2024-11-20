@@ -12,22 +12,26 @@
 
 package me.pandamods.pandalib.networking;
 
-import dev.architectury.platform.Platform;
 import dev.architectury.utils.Env;
 import net.minecraft.world.entity.player.Player;
 
 public class NetworkContext {
 	private final Player player;
+	private final Env envDirection;
 
-	public NetworkContext(Player player) {
+	public NetworkContext(Player player, Env envDirection) {
 		this.player = player;
+		this.envDirection = envDirection;
 	}
 
 	public Player getPlayer() {
 		return player;
 	}
 
-	public Env getEnvironment() {
-		return Platform.getEnvironment();
+	/**
+	 * @return the environment direction the packet was send.
+	 */
+	public Env getDirection() {
+		return envDirection;
 	}
 }

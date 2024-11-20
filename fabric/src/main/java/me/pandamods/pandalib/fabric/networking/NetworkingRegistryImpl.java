@@ -45,7 +45,7 @@ public class NetworkingRegistryImpl implements NetworkingRegistry {
 
 		@Override
 		public void receive(Minecraft minecraft, ClientPacketListener clientPacketListener, FriendlyByteBuf friendlyByteBuf, PacketSender packetSender) {
-			NetworkContext networkContext = new NetworkContext(minecraft.player);
+			NetworkContext networkContext = new NetworkContext(minecraft.player, Env.CLIENT);
 			receiver.receive(networkContext, friendlyByteBuf);
 		}
 	}
@@ -56,7 +56,7 @@ public class NetworkingRegistryImpl implements NetworkingRegistry {
 		ServerPlayNetworking.registerGlobalReceiver(resourceLocation, (minecraftServer, serverPlayer,
 																	   serverGamePacketListener, friendlyByteBuf,
 																	   packetSender) ->
-				receiver.receive(new NetworkContext(serverPlayer), friendlyByteBuf));
+				receiver.receive(new NetworkContext(serverPlayer, Env.SERVER), friendlyByteBuf));
 	}
 
 	@Override

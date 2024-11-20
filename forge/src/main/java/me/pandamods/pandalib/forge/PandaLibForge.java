@@ -25,14 +25,15 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod(PandaLib.MOD_ID)
 public class PandaLibForge {
-    public PandaLibForge(IEventBus eventBus) {
-		EventBuses.registerModEventBus(PandaLib.MOD_ID, FMLJavaModLoadingContext.get().getModEventBus());
+    public PandaLibForge() {
+		IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+		EventBuses.registerModEventBus(PandaLib.MOD_ID, eventBus);
 		eventBus.addListener(PandaLibForge::commonSetup);
 		eventBus.addListener(PandaLibClientForge::clientSetup);
-		NetworkingEvents.PACKET_PAYLOAD_REGISTRY.invoker().register(new NetworkingRegistryImpl());
     }
 
 	public static void commonSetup(final FMLCommonSetupEvent event) {
 		new PandaLib(new PacketDistributorImpl());
+		NetworkingEvents.PACKET_PAYLOAD_REGISTRY.invoker().register(new NetworkingRegistryImpl());
 	}
 }
