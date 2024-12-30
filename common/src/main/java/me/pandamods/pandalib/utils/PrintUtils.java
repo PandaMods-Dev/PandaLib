@@ -12,10 +12,7 @@
 
 package me.pandamods.pandalib.utils;
 
-import org.jetbrains.annotations.ApiStatus;
 import org.joml.*;
-
-import java.text.NumberFormat;
 
 @SuppressWarnings("unused")
 public class PrintUtils {

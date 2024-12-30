@@ -104,53 +104,14 @@ subprojects {
 			parchment("org.parchmentmc.data:parchment-${properties["parchment_minecraft_version"]}:${properties["parchment_version"]}@zip")
 		})
 
-		
-		"jarShadow"("org.lwjgl:lwjgl-assimp:${properties["deps_lwjgl_version"]}") {
-			exclude(group = "org.lwjgl", module = "lwjgl")
-		}
-
-		for (natives in arrayOf("natives-windows", "natives-linux", "natives-macos")) {
-			"jarShadow"("org.lwjgl:lwjgl-assimp:${properties["deps_lwjgl_version"]}:${natives}") {
-				exclude(group = "org.lwjgl", module = "lwjgl")
-			}
-		}
-
-		// Embed joml
-		"jarShadow"("org.joml:joml:${properties["deps_joml_version"]}")
-
 		compileOnly("org.jetbrains:annotations:24.1.0")
 	}
-
-	if (isMinecraftSubProject) {
-		tasks.withType<ShadowJar> {
-			exclude("architectury.common.json")
-		}
-	}
-
+	
 	tasks.withType<ShadowJar> {
 		configurations = listOf(project.configurations.getByName("shadowBundle"), project.configurations.getByName("jarShadow"))
 		archiveClassifier.set("dev-shadow")
 
-		// Relocate assimp so it will not cause any conflicts with other mods also using it.
-		relocate("org.lwjgl.assimp", "${properties["maven_group"]}.assimp")
-		// Relocate natives
-		relocate("windows.x64.org.lwjgl.assimp", "windows.x64.${properties["maven_group"]}.assimp")
-		relocate("linux.x64.org.lwjgl.assimp", "linux.x64.${properties["maven_group"]}.assimp")
-		relocate("macos.x64.org.lwjgl.assimp", "macos.x64.${properties["maven_group"]}.assimp")
-
-		relocate("META-INF.windows.arm64.org.lwjgl.assimp", "META-INF.windows.arm64.${properties["maven_group"]}.assimp")
-		relocate("META-INF.windows.x64.org.lwjgl.assimp", "META-INF.windows.x64.${properties["maven_group"]}.assimp")
-		relocate("META-INF.windows.x86.org.lwjgl.assimp", "META-INF.windows.x86.${properties["maven_group"]}.assimp")
-
-		relocate("META-INF.linux.arm32.org.lwjgl.assimp", "META-INF.linux.arm32.${properties["maven_group"]}.assimp")
-		relocate("META-INF.linux.arm64.org.lwjgl.assimp", "META-INF.linux.arm64.${properties["maven_group"]}.assimp")
-		relocate("META-INF.linux.x64.org.lwjgl.assimp", "META-INF.linux.x64.${properties["maven_group"]}.assimp")
-
-		relocate("META-INF.macos.arm64.org.lwjgl.assimp", "META-INF.macos.arm64.${properties["maven_group"]}.assimp")
-		relocate("META-INF.macos.x64.org.lwjgl.assimp", "META-INF.macos.x64.${properties["maven_group"]}.assimp")
-
-		// Relocate joml as to not cause issues with Minecraft
-		relocate("org.joml", "${properties["maven_group"]}.joml")
+		exclude("architectury.common.json")
 	}
 
 	tasks.withType<JavaCompile> {

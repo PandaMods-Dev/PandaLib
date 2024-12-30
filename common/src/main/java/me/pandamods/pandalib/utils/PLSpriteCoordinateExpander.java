@@ -19,11 +19,15 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 @Environment(value=EnvType.CLIENT)
 @SuppressWarnings("unused")
-public class PLSpriteCoordinateExpander implements VertexConsumer {
+public final class PLSpriteCoordinateExpander implements VertexConsumer {
     private final VertexConsumer delegate;
     private final TextureAtlasSprite sprite;
 
-    public PLSpriteCoordinateExpander(VertexConsumer delegate, TextureAtlasSprite sprite) {
+	public static VertexConsumer of(VertexConsumer delegate, TextureAtlasSprite sprite) {
+		return new PLSpriteCoordinateExpander(delegate, sprite);
+	}
+	
+    private PLSpriteCoordinateExpander(VertexConsumer delegate, TextureAtlasSprite sprite) {
         this.delegate = delegate;
         this.sprite = sprite;
     }
