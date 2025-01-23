@@ -25,6 +25,7 @@ import me.pandamods.pandalib.utils.Constants;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.Unit;
 import org.slf4j.Logger;
 
 import java.io.BufferedReader;
@@ -46,8 +47,7 @@ public class ModelManager implements IdentifiableResourceReloadListener {
 	public CompletableFuture<Void> reload(PreparationBarrier preparationBarrier, ResourceManager resourceManager, Executor backgroundExecutor, Executor gameExecutor) {
 		Map<ResourceLocation, Model> models = Maps.newHashMap();
 		
-		return new CompletableFuture<>()
-				.thenCompose(preparationBarrier::wait)
+		return preparationBarrier.wait(Unit.INSTANCE)
 				.thenAcceptAsync(unused -> {
 					Set<Map.Entry<ResourceLocation, Resource>> entries = resourceManager.listResources("pandalib/model", 
 							resource -> resource.getPath().endsWith(".plm")).entrySet();
@@ -77,7 +77,7 @@ public class ModelManager implements IdentifiableResourceReloadListener {
 						models.put(resourceLocation, parseModel(modelJson));
 					}
 					this.models = ImmutableMap.copyOf(models);
-				});
+				}, gameExecutor);
 	}
 	
 	private Model parseModel(JsonObject modelJson) {
