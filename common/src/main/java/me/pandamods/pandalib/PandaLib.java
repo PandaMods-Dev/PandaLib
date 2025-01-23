@@ -12,27 +12,20 @@
 
 package me.pandamods.pandalib;
 
-import me.pandamods.pandalib.config.Config;
-import me.pandamods.pandalib.config.ConfigData;
-import me.pandamods.pandalib.config.PandaLibConfig;
-import me.pandamods.pandalib.config.holders.CommonConfigHolder;
 import me.pandamods.pandalib.core.event.EventHandler;
 import me.pandamods.pandalib.core.network.ConfigNetworking;
 import me.pandamods.pandalib.event.events.NetworkingEvents;
-import me.pandamods.pandalib.platform.Services;
 import net.minecraft.resources.ResourceLocation;
-
-import java.awt.*;
 
 public class PandaLib {
     public static final String MOD_ID = "pandalib";
-	private static PandaLib instance;
+	private static PandaLib INSTANCE;
 
     public PandaLib() {
 		NetworkingEvents.PACKET_PAYLOAD_REGISTRY.register(ConfigNetworking::registerPackets);
 
 		EventHandler.init();
-		instance = this;
+		INSTANCE = this;
     }
 
 	public static ResourceLocation resourceLocation(String path) {
@@ -40,6 +33,6 @@ public class PandaLib {
 	}
 
 	public static PandaLib getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 }

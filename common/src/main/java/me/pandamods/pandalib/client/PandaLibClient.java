@@ -15,13 +15,25 @@ package me.pandamods.pandalib.client;
 import me.pandamods.pandalib.PandaLib;
 import me.pandamods.pandalib.core.client.event.EventHandlerClient;
 import me.pandamods.pandalib.registry.ReloadListenerRegistry;
+import me.pandamods.pandalib.resource.ModelManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.server.packs.PackType;
 
 @Environment(EnvType.CLIENT)
 public class PandaLibClient {
+	private static PandaLibClient INSTANCE;
+	
+	public final ModelManager modelManager = new ModelManager();
+	
     public PandaLibClient() {
+		INSTANCE = this;
 		EventHandlerClient.init();
+
+		ReloadListenerRegistry.register(PackType.CLIENT_RESOURCES, modelManager);
     }
+
+	public static PandaLibClient getInstance() {
+		return INSTANCE;
+	}
 }

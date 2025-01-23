@@ -31,4 +31,8 @@ public class ReloadListenerRegistry {
 	public static void register(PackType packType, PreparableReloadListener listener, ResourceLocation id, List<ResourceLocation> dependencies) {
 		Services.REGISTRATION.registerReloadListener(packType, listener, id, dependencies);
 	}
+
+	public static void register(PackType packType, IdentifiableResourceReloadListener listener) {
+		Services.REGISTRATION.registerReloadListener(packType, listener, listener.getResourceID(), listener.getResourceDependencies());
+	}
 }
