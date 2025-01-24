@@ -12,10 +12,13 @@
 
 package me.pandamods.pandalib.neoforge;
 
+import dev.architectury.utils.Env;
 import me.pandamods.pandalib.PandaLib;
+import me.pandamods.pandalib.neoforge.client.PandaLibClientNeoForge;
 import me.pandamods.pandalib.neoforge.platform.NetworkHelperImpl;
 import me.pandamods.pandalib.neoforge.platform.RegistrationHelperImpl;
 import me.pandamods.pandalib.platform.Services;
+import me.pandamods.pandalib.utils.EnvRunner;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
@@ -23,7 +26,7 @@ import net.neoforged.neoforge.common.NeoForge;
 @Mod(PandaLib.MOD_ID)
 public class PandaLibNeoForge {
     public PandaLibNeoForge(IEventBus eventBus) {
-		new PandaLib(new PacketDistributorImpl());
+		new PandaLib();
 
 		eventBus.addListener(NetworkHelperImpl::registerPackets);
 		if (Services.REGISTRATION instanceof RegistrationHelperImpl helper) {
@@ -31,5 +34,7 @@ public class PandaLibNeoForge {
 			eventBus.addListener(helper::registerNewRegistryEvent);
 			NeoForge.EVENT_BUS.addListener(helper::addReloadListenerEvent);
 		}
+
+		EnvRunner.runIf(Env.CLIENT, () -> () -> new PandaLibClientNeoForge(eventBus));
     }
 }

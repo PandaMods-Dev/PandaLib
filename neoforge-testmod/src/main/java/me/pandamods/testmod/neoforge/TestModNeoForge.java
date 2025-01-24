@@ -12,7 +12,10 @@
 
 package me.pandamods.testmod.neoforge;
 
+import dev.architectury.utils.Env;
+import me.pandamods.pandalib.utils.EnvRunner;
 import me.pandamods.test.TestMod;
+import me.pandamods.testmod.neoforge.client.TestModClientNeoForge;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 
@@ -20,5 +23,7 @@ import net.neoforged.fml.common.Mod;
 public class TestModNeoForge {
     public TestModNeoForge(IEventBus eventBus) {
 		new TestMod();
+
+		EnvRunner.runIf(Env.CLIENT, () -> () -> new TestModClientNeoForge(eventBus));
     }
 }

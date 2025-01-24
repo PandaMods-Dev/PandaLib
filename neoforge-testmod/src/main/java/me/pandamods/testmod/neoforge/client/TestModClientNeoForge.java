@@ -19,14 +19,8 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 
-
-@Mod(value = TestMod.MOD_ID, dist = Dist.CLIENT)
 public class TestModClientNeoForge {
     public TestModClientNeoForge(IEventBus eventBus) {
-		eventBus.addListener(TestModClientNeoForge::clientSetup);
-    }
-
-	public static void clientSetup(FMLClientSetupEvent event) {
 		new TestModClient();
-	}
+    }
 }
