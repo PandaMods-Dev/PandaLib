@@ -24,6 +24,9 @@ public class NetworkContext {
 		this.envDirection = envDirection;
 	}
 
+	/**
+	 * @return The Sender if this was sent to the server or the receiver if this was sent to a client
+	 */
 	public Player getPlayer() {
 		return player;
 	}

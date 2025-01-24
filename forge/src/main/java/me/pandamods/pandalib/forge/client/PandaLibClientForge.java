@@ -16,7 +16,7 @@ import me.pandamods.pandalib.client.PandaLibClient;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 public class PandaLibClientForge {
-	public static void clientSetup(final FMLClientSetupEvent event) {
-		PandaLibClient.init();
-	}
+    public PandaLibClientForge(IEventBus eventBus) {
+		new PandaLibClient();
+    }
 }

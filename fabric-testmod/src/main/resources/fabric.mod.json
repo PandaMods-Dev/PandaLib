@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+	"id": "testmod",
+	"version": "${mod_version}",
+	"name": "Test Mod",
+	"description": "Testing environment for mod development and testing purposes",
+	"authors": [
+		"${mod_author}"
+	],
+	"contact": {},
+  "license": "${mod_license}",
+	"icon": "assets/${mod_id}/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+			"me.pandamods.testmod.fabric.TestModFabric"
+    ],
+		"client": [
+			"me.pandamods.testmod.fabric.client.TestModClientFabric"
+		]
+  },
+	"mixins": [],
+  "depends": {
+    "fabric": "*",
+    "minecraft": "${fabric_version_range}"
+  }
+}
