@@ -25,10 +25,7 @@ allprojects {
 }
 
 subprojects {
-	val isMinecraftSubProject = findProject(":common") != project && findProject(":testmod-common") != project
-	val isFabric = findProject(":fabric") == project || findProject(":testmod-fabric") == project
-	val isForge = findProject(":forge") == project || findProject(":testmod-forge") == project
-	val isNeoForge = findProject(":neoforge") == project || findProject(":testmod-neoforge") == project
+	val isMinecraftSubProject = findProject(":common") != project && findProject(":common-testmod") != project
 
 	apply(plugin = "architectury-plugin")
 	apply(plugin = "dev.architectury.loom")
@@ -107,25 +104,6 @@ subprojects {
 			parchment("org.parchmentmc.data:parchment-${properties["parchment_minecraft_version"]}:${properties["parchment_version"]}@zip")
 		})
 
-		// Assimp Library
-		"jarShadow"("org.lwjgl:lwjgl-assimp:${properties["deps_lwjgl_version"]}") {
-			exclude(group = "org.lwjgl", module = "lwjgl")
-		}
-		if (isMinecraftSubProject) {
-			// Assimp natives
-			"jarShadow"("org.lwjgl:lwjgl-assimp:${properties["deps_lwjgl_version"]}:natives-windows") {
-				exclude(group = "org.lwjgl", module = "lwjgl")
-			}
-
-			"jarShadow"("org.lwjgl:lwjgl-assimp:${properties["deps_lwjgl_version"]}:natives-linux") {
-				exclude(group = "org.lwjgl", module = "lwjgl")
-			}
-
-			"jarShadow"("org.lwjgl:lwjgl-assimp:${properties["deps_lwjgl_version"]}:natives-macos") {
-				exclude(group = "org.lwjgl", module = "lwjgl")
-			}
-		}
-
 		// Embed joml
 		"jarShadow"("org.joml:joml:${properties["deps_joml_version"]}")
 
@@ -141,24 +119,6 @@ subprojects {
 	tasks.withType<ShadowJar> {
 		configurations = listOf(project.configurations.getByName("shadowBundle"), project.configurations.getByName("jarShadow"))
 		archiveClassifier.set("dev-shadow")
-
-		// Relocate assimp so it will not cause any conflicts with other mods also using it.
-		relocate("org.lwjgl.assimp", "${properties["maven_group"]}.assimp")
-		// Relocate natives
-		relocate("windows.x64.org.lwjgl.assimp", "windows.x64.${properties["maven_group"]}.assimp")
-		relocate("linux.x64.org.lwjgl.assimp", "linux.x64.${properties["maven_group"]}.assimp")
-		relocate("macos.x64.org.lwjgl.assimp", "macos.x64.${properties["maven_group"]}.assimp")
-
-		relocate("META-INF.windows.arm64.org.lwjgl.assimp", "META-INF.windows.arm64.${properties["maven_group"]}.assimp")
-		relocate("META-INF.windows.x64.org.lwjgl.assimp", "META-INF.windows.x64.${properties["maven_group"]}.assimp")
-		relocate("META-INF.windows.x86.org.lwjgl.assimp", "META-INF.windows.x86.${properties["maven_group"]}.assimp")
-
-		relocate("META-INF.linux.arm32.org.lwjgl.assimp", "META-INF.linux.arm32.${properties["maven_group"]}.assimp")
-		relocate("META-INF.linux.arm64.org.lwjgl.assimp", "META-INF.linux.arm64.${properties["maven_group"]}.assimp")
-		relocate("META-INF.linux.x64.org.lwjgl.assimp", "META-INF.linux.x64.${properties["maven_group"]}.assimp")
-
-		relocate("META-INF.macos.arm64.org.lwjgl.assimp", "META-INF.macos.arm64.${properties["maven_group"]}.assimp")
-		relocate("META-INF.macos.x64.org.lwjgl.assimp", "META-INF.macos.x64.${properties["maven_group"]}.assimp")
 
 		// Relocate joml as to not cause issues with Minecraft
 		relocate("org.joml", "${properties["maven_group"]}.joml")
@@ -217,30 +177,6 @@ subprojects {
 
 	java {
 		withSourcesJar()
-	}
-
-	// Maven Publishing
-	publishing {
-		publications {
-			register("mavenJava", MavenPublication::class) {
-				groupId = properties["maven_group"] as String
-				artifactId = "${properties["mod_id"]}-${project.name}"
-				version = project.version as String
-
-				from(components["java"])
-			}
-
-			register("mavenJavaDev", MavenPublication::class) {
-				groupId = properties["maven_group"] as String
-				artifactId = "${properties["mod_id"]}-${project.name}"
-				version = "${project.version}+dev.${properties["dev_version"]}"
-
-				from(components["java"])
-			}
-		}
-
-		repositories {
-		}
 	}
 }
 

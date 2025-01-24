@@ -18,13 +18,13 @@ import me.pandamods.pandalib.config.holders.ClientConfigHolder;
 import me.pandamods.pandalib.config.holders.CommonConfigHolder;
 import me.pandamods.pandalib.core.network.packets.ConfigPacketData;
 import me.pandamods.pandalib.networking.NetworkContext;
-import me.pandamods.pandalib.networking.NetworkingRegistry;
+import me.pandamods.pandalib.networking.NetworkRegistry;
 import me.pandamods.pandalib.networking.PacketDistributor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
 public class ConfigNetworking {
-	public static void registerPackets(NetworkingRegistry registry) {
+	public static void registerPackets(NetworkRegistry registry) {
 		registry.registerBiDirectionalReceiver(ConfigPacketData.TYPE, ConfigCodec.INSTANCE,
 				ConfigNetworking::CommonConfigReceiver, ConfigNetworking::ClientConfigReceiver);
 	}

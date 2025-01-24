@@ -17,6 +17,7 @@ import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
+@SuppressWarnings("unused")
 public class MathUtils {
 	public static Matrix4f lerpMatrix(Matrix4f matrix, Matrix4f other, float alpha) {
 		return lerpMatrix(matrix, other, alpha, new Matrix4f());

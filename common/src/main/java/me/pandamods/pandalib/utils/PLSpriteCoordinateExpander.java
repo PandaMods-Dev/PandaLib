@@ -18,6 +18,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 @Environment(value=EnvType.CLIENT)
+@SuppressWarnings("unused")
 public class PLSpriteCoordinateExpander implements VertexConsumer {
     private final VertexConsumer delegate;
     private final TextureAtlasSprite sprite;

@@ -18,6 +18,6 @@ import net.fabricmc.api.ClientModInitializer;
 public class PandaLibClientFabric implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
-		PandaLibClient.init();
+		new PandaLibClient();
 	}
 }

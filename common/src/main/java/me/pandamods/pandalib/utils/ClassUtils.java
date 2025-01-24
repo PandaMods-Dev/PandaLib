@@ -15,6 +15,7 @@ package me.pandamods.pandalib.utils;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 
+@SuppressWarnings("unused")
 public class ClassUtils {
 	public static <T> T constructUnsafely(Class<T> cls) {
 		try {
