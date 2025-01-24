@@ -24,6 +24,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.profiling.ProfilerFiller;
 
 import java.util.Collection;
 import java.util.List;
@@ -57,8 +58,9 @@ public class RegistrationHelperImpl implements RegistrationHelper {
 			}
 
 			@Override
-			public CompletableFuture<Void> reload(PreparationBarrier preparationBarrier, ResourceManager resourceManager, Executor executor, Executor executor2) {
-				return listener.reload(preparationBarrier, resourceManager, executor, executor2);
+			public CompletableFuture<Void> reload(PreparationBarrier preparationBarrier, ResourceManager resourceManager, ProfilerFiller preparationsProfiler, ProfilerFiller reloadProfiler,
+												  Executor executor, Executor executor2) {
+				return listener.reload(preparationBarrier, resourceManager, preparationsProfiler, reloadProfiler, executor, executor2);
 			}
 
 			@Override

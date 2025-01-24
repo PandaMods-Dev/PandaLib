@@ -47,7 +47,7 @@ public class DeferredObject<T> implements Supplier<T> {
 
 		Registry<R> registry = (Registry<R>) getRegistry();
 		if (registry != null) {
-			this.holder = registry.get((ResourceKey<R>) this.key).orElse(null);
+			this.holder = registry.getHolder((ResourceKey<R>) this.key).orElse(null);
 		} else if (throwOnMissingRegistry) {
 			throw new IllegalStateException("Registry not present for " + this + ": " + this.key.registry());
 		}
@@ -62,7 +62,7 @@ public class DeferredObject<T> implements Supplier<T> {
 	}
 
 	public Registry<?> getRegistry() {
-		return BuiltInRegistries.REGISTRY.getValue(getKey().registry());
+		return BuiltInRegistries.REGISTRY.get(getKey().registry());
 	}
 
 	public ResourceLocation getId() {
