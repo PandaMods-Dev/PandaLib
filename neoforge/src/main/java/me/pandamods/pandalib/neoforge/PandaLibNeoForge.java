@@ -13,23 +13,23 @@
 package me.pandamods.pandalib.neoforge;
 
 import me.pandamods.pandalib.PandaLib;
-import me.pandamods.pandalib.neoforge.networking.NetworkingRegistryImpl;
-import me.pandamods.pandalib.neoforge.networking.PacketDistributorImpl;
-import me.pandamods.pandalib.neoforge.client.PandaLibClientNeoForge;
+import me.pandamods.pandalib.neoforge.platform.NetworkHelperImpl;
+import me.pandamods.pandalib.neoforge.platform.RegistrationHelperImpl;
+import me.pandamods.pandalib.platform.Services;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.common.NeoForge;
 
 @Mod(PandaLib.MOD_ID)
 public class PandaLibNeoForge {
     public PandaLibNeoForge(IEventBus eventBus) {
-		eventBus.addListener(FMLClientSetupEvent.class, event -> new PandaLibClientNeoForge(eventBus));
-		eventBus.addListener(FMLCommonSetupEvent.class, PandaLibNeoForge::commonSetup);
-		eventBus.addListener(NetworkingRegistryImpl::registerPackets);
-    }
-
-	private static void commonSetup(final FMLCommonSetupEvent event) {
 		new PandaLib(new PacketDistributorImpl());
-	}
+
+		eventBus.addListener(NetworkHelperImpl::registerPackets);
+		if (Services.REGISTRATION instanceof RegistrationHelperImpl helper) {
+			eventBus.addListener(helper::registerEvent);
+			eventBus.addListener(helper::registerNewRegistryEvent);
+			NeoForge.EVENT_BUS.addListener(helper::addReloadListenerEvent);
+		}
+    }
 }

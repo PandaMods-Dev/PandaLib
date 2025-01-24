@@ -21,7 +21,7 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 
 public class PandaLibClientNeoForge {
     public PandaLibClientNeoForge(IEventBus eventBus) {
-		eventBus.addListener(PandaLibClientNeoForge::clientSetup);
+		new PandaLibClient();
     }
 
 	public static void clientSetup(FMLClientSetupEvent event) {
