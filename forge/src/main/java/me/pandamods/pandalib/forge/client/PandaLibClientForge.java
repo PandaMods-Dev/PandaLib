@@ -13,6 +13,7 @@
 package me.pandamods.pandalib.forge.client;
 
 import me.pandamods.pandalib.client.PandaLibClient;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 public class PandaLibClientForge {

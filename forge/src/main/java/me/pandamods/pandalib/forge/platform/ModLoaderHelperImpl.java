@@ -10,24 +10,21 @@
  *  along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.pandamods.pandalib.fabric.platform;
+package me.pandamods.pandalib.forge.platform;
 
 import me.pandamods.pandalib.platform.services.ModLoaderHelper;
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
-import net.fabricmc.loader.api.metadata.ModMetadata;
-import net.fabricmc.loader.api.metadata.Person;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.forgespi.language.IModInfo;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ModLoaderHelperImpl implements ModLoaderHelper {
 	private final Map<String, Mod> mods = new HashMap<>();
 
 	@Override
 	public boolean isModLoaded(String modId) {
-		return FabricLoader.getInstance().isModLoaded(modId);
+		return ModList.get().isLoaded(modId);
 	}
 
 	@Override
@@ -37,8 +34,8 @@ public class ModLoaderHelperImpl implements ModLoaderHelper {
 
 	@Override
 	public List<Mod> getMods() {
-		for (ModContainer mod : FabricLoader.getInstance().getAllMods()) {
-			getMod(mod.getMetadata().getId());
+		for (IModInfo mod : ModList.get().getMods()) {
+			getMod(mod.getModId());
 		}
 		
 		return List.copyOf(mods.values());
@@ -46,41 +43,45 @@ public class ModLoaderHelperImpl implements ModLoaderHelper {
 
 	@Override
 	public List<String> getModIds() {
-		return FabricLoader.getInstance().getAllMods().stream().map(ModContainer::getMetadata).map(ModMetadata::getId).toList();
+		return ModList.get().getMods().stream().map(IModInfo::getModId).toList();
 	}
 
 	private static class ModImpl implements Mod {
 		private final ModContainer container;
-		private final ModMetadata metadata;
+		private final IModInfo info;
 		
 		public ModImpl(String modId) {
-			this.container = FabricLoader.getInstance().getModContainer(modId).orElseThrow();
-			this.metadata = this.container.getMetadata();
+			this.container = ModList.get().getModContainerById(modId).orElseThrow();
+			this.info = ModList.get().getMods().stream()
+					.filter(modInfo -> Objects.equals(modInfo.getModId(), modId))
+					.findAny()
+					.orElseThrow();
 		}
 
 		@Override
 		public String getId() {
-			return metadata.getId();
+			return info.getModId();
 		}
 
 		@Override
 		public String getDisplayName() {
-			return metadata.getName();
+			return info.getDisplayName();
 		}
 
 		@Override
 		public String getDescription() {
-			return metadata.getDescription();
+			return info.getDescription();
 		}
 
 		@Override
 		public List<String> getAuthors() {
-			return metadata.getAuthors().stream().map(Person::getName).toList();
+			Optional<String> optional = info.getConfig().getConfigElement("authors").map(String::valueOf);
+			return optional.map(List::of).orElse(Collections.emptyList());
 		}
 
 		@Override
 		public String getVersion() {
-			return metadata.getVersion().getFriendlyString();
+			return info.getVersion().toString();
 		}
 	}
 }

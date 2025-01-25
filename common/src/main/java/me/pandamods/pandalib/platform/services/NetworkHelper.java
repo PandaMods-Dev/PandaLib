@@ -12,11 +12,12 @@
 
 package me.pandamods.pandalib.platform.services;
 
+import me.pandamods.pandalib.networking.NetworkRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
-public interface IPacketDistributor {
+public interface NetworkHelper extends NetworkRegistry {
 	void sendToServer(ResourceLocation resourceLocation, FriendlyByteBuf byteBuf);
 
 	void sendToPlayer(ServerPlayer player, ResourceLocation resourceLocation, FriendlyByteBuf byteBuf);

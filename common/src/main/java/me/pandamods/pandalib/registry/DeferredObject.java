@@ -58,7 +58,7 @@ public class DeferredObject<T> implements Supplier<T> {
 	}
 
 	public ResourceKey<? extends Registry<?>> getRegistryKey() {
-		return key.registryKey();
+		return ResourceKey.createRegistryKey(key.location());
 	}
 
 	public Registry<?> getRegistry() {

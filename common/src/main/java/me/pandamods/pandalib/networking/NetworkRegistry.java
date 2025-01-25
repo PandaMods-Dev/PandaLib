@@ -17,8 +17,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.resources.ResourceLocation;
 
 @SuppressWarnings("unused")
-public interface NetworkingRegistry {
-	@Environment(EnvType.CLIENT)
+public interface NetworkRegistry {
 	void registerClientReceiver(ResourceLocation resourceLocation,
 								NetworkReceiver receiver);
 

@@ -10,35 +10,27 @@
  *  along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.pandamods.pandalib.forge;
+package me.pandamods.test.forge;
 
 import dev.architectury.platform.forge.EventBuses;
 import dev.architectury.utils.Env;
 import me.pandamods.pandalib.PandaLib;
-import me.pandamods.pandalib.event.events.NetworkingEvents;
-import me.pandamods.pandalib.forge.client.PandaLibClientForge;
-import me.pandamods.pandalib.forge.platform.NetworkHelperImpl;
+import me.pandamods.test.TestMod;
+import me.pandamods.test.forge.client.TestModClientForge;
 import me.pandamods.pandalib.forge.platform.RegistrationHelperImpl;
 import me.pandamods.pandalib.platform.Services;
 import me.pandamods.pandalib.utils.EnvRunner;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-@Mod(PandaLib.MOD_ID)
-public class PandaLibForge {
-    public PandaLibForge() {
+@Mod(TestMod.MOD_ID)
+public class TestModForge {
+    public TestModForge() {
 		IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
-		EventBuses.registerModEventBus(PandaLib.MOD_ID, eventBus);
+		EventBuses.registerModEventBus(TestMod.MOD_ID, eventBus);
 
-		new PandaLib();
-		if (Services.REGISTRATION instanceof RegistrationHelperImpl helper) {
-			eventBus.addListener(helper::registerEvent);
-			MinecraftForge.EVENT_BUS.addListener(helper::addReloadListenerEvent);
-		}
-		NetworkingEvents.PACKET_PAYLOAD_REGISTRY.invoker().register(new NetworkHelperImpl());
-
-		EnvRunner.runIf(Env.CLIENT, () -> () -> new PandaLibClientForge(eventBus));
+		new TestMod();
+		EnvRunner.runIf(Env.CLIENT, () -> () -> new TestModClientForge(eventBus));
     }
 }

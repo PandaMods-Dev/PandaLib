@@ -12,11 +12,11 @@
 
 package me.pandamods.pandalib.fabric.platform;
 
+import com.mojang.serialization.Lifecycle;
 import me.pandamods.pandalib.platform.services.RegistrationHelper;
 import me.pandamods.pandalib.registry.DeferredObject;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.minecraft.core.RegistrationInfo;
 import net.minecraft.core.Registry;
 import net.minecraft.core.WritableRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -46,7 +46,7 @@ public class RegistrationHelperImpl implements RegistrationHelper {
 		if (BuiltInRegistries.REGISTRY.containsKey(registryName))
 			throw new IllegalStateException("Attempted duplicate registration of registry " + registryName);
 		
-		((WritableRegistry) BuiltInRegistries.REGISTRY).register(registry.key(), registry, RegistrationInfo.BUILT_IN);
+		((WritableRegistry) BuiltInRegistries.REGISTRY).register(registry.key(), registry, Lifecycle.stable());
 	}
 	
 	@Override

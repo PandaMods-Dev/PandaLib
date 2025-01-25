@@ -14,40 +14,27 @@ package me.pandamods.pandalib.fabric.platform;
 
 import dev.architectury.utils.Env;
 import me.pandamods.pandalib.fabric.PandaLibFabric;
-import me.pandamods.pandalib.fabric.platform.utils.ClientPlayPayloadHandler;
+import me.pandamods.pandalib.fabric.platform.utils.ClientPlayChannelHandler;
 import me.pandamods.pandalib.networking.NetworkContext;
 import me.pandamods.pandalib.networking.NetworkReceiver;
 import me.pandamods.pandalib.platform.services.NetworkHelper;
 import me.pandamods.pandalib.utils.EnvRunner;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 
 public class NetworkHelperImpl implements NetworkHelper {
 	@Override
-	@Environment(EnvType.CLIENT)
 	public void registerClientReceiver(ResourceLocation resourceLocation,
 									   NetworkReceiver receiver) {
-		ClientPlayNetworking.registerGlobalReceiver(resourceLocation, new ClientPlayChannelHandler(receiver));
-	}
-
-	@Environment(EnvType.CLIENT)
-	private static class ClientPlayChannelHandler implements ClientPlayNetworking.PlayChannelHandler {
-		private final NetworkReceiver receiver;
-
-		ClientPlayChannelHandler(NetworkReceiver receiver) {
-			this.receiver = receiver;
-		}
-
-		@Override
-		public void receive(Minecraft minecraft, ClientPacketListener clientPacketListener, FriendlyByteBuf friendlyByteBuf, PacketSender packetSender) {
-			NetworkContext networkContext = new NetworkContext(minecraft.player, Env.CLIENT);
-			receiver.receive(networkContext, friendlyByteBuf);
-		}
+		EnvRunner.runIf(Env.CLIENT, () -> () ->
+				ClientPlayNetworking.registerGlobalReceiver(resourceLocation, (minecraft, clientPacketListener,
+																			   friendlyByteBuf, packetSender) -> {
+					ClientPlayChannelHandler.receivePlay(receiver, minecraft, clientPacketListener, friendlyByteBuf, packetSender);
+				})
+		);
 	}
 
 	@Override
@@ -64,7 +51,23 @@ public class NetworkHelperImpl implements NetworkHelper {
 											  NetworkReceiver clientReceiver,
 											  NetworkReceiver serverReceiver) {
 		registerServerReceiver(resourceLocation, serverReceiver);
-		if (Platform.getEnvironment() == Env.CLIENT)
-			registerClientReceiver(resourceLocation, clientReceiver);
+		registerClientReceiver(resourceLocation, clientReceiver);
+	}
+
+	@Override
+	public void sendToServer(ResourceLocation resourceLocation, FriendlyByteBuf byteBuf) {
+		ClientPlayNetworking.send(resourceLocation, byteBuf);
+	}
+
+	@Override
+	public void sendToPlayer(ServerPlayer player, ResourceLocation resourceLocation, FriendlyByteBuf byteBuf) {
+		ServerPlayNetworking.send(player, resourceLocation, byteBuf);
+	}
+
+	@Override
+	public void sendToAllPlayers(ResourceLocation resourceLocation, FriendlyByteBuf byteBuf) {
+		for (ServerPlayer player : PandaLibFabric.server.getPlayerList().getPlayers()) {
+			sendToPlayer(player, resourceLocation, byteBuf);
+		}
 	}
 }
