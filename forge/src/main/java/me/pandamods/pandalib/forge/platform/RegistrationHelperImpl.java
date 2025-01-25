@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Oliver Froberg (The Panda Oliver)
+ * Copyright (C) 2025 Oliver Froberg (The Panda Oliver)
  *
  * This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published by
@@ -18,7 +18,6 @@ import me.pandamods.pandalib.registry.DeferredObject;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
 import net.minecraft.core.WritableRegistry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
@@ -65,7 +64,7 @@ public class RegistrationHelperImpl implements RegistrationHelper {
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	public void registerNewRegistries() {
 		for (Registry registry : pendingRegistryTypes) {
-			((WritableRegistry) BuiltInRegistries.REGISTRY).register(registry.key(), registry, Lifecycle.stable());
+			((WritableRegistry) Registry.REGISTRY).register(registry.key(), registry, Lifecycle.stable());
 		}
 	}
 

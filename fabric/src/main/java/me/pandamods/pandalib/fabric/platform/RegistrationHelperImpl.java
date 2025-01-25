@@ -19,7 +19,6 @@ import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.core.Registry;
 import net.minecraft.core.WritableRegistry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
@@ -43,10 +42,10 @@ public class RegistrationHelperImpl implements RegistrationHelper {
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public <T> void registerNewRegistry(Registry<T> registry) {
 		ResourceLocation registryName = registry.key().location();
-		if (BuiltInRegistries.REGISTRY.containsKey(registryName))
+		if (Registry.REGISTRY.containsKey(registryName))
 			throw new IllegalStateException("Attempted duplicate registration of registry " + registryName);
 		
-		((WritableRegistry) BuiltInRegistries.REGISTRY).register(registry.key(), registry, Lifecycle.stable());
+		((WritableRegistry) Registry.REGISTRY).register(registry.key(), registry, Lifecycle.stable());
 	}
 	
 	@Override

@@ -14,7 +14,6 @@ package me.pandamods.pandalib.registry;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
@@ -62,7 +61,7 @@ public class DeferredObject<T> implements Supplier<T> {
 	}
 
 	public Registry<?> getRegistry() {
-		return BuiltInRegistries.REGISTRY.get(getKey().registry());
+		return Registry.REGISTRY.get(getKey().registry());
 	}
 
 	public ResourceLocation getId() {

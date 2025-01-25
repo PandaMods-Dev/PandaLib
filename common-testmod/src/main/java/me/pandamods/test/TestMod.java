@@ -13,7 +13,6 @@
 package me.pandamods.test;
 
 import com.mojang.serialization.Lifecycle;
-import dev.architectury.event.events.client.ClientLifecycleEvent;
 import me.pandamods.pandalib.config.PandaLibConfig;
 import me.pandamods.pandalib.config.holders.ClientConfigHolder;
 import me.pandamods.pandalib.config.holders.CommonConfigHolder;
@@ -22,6 +21,7 @@ import me.pandamods.pandalib.registry.DeferredRegister;
 import me.pandamods.pandalib.registry.RegistryRegister;
 import me.pandamods.test.config.ClientTestConfig;
 import me.pandamods.test.config.CommonTestConfig;
+import net.minecraft.core.Holder;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -35,7 +35,7 @@ public class TestMod {
 	private static final ClientConfigHolder<ClientTestConfig> CLIENT_TEST_CONFIG = PandaLibConfig.registerClient(ClientTestConfig.class);
 
 	public static final ResourceKey<Registry<TestRegistry>> TEST_REGISTRY_KEY = ResourceKey.createRegistryKey(TestMod.resourceLocation("test_registry"));
-	public static final Registry<TestRegistry> TEST_REGISTRY = RegistryRegister.register(new MappedRegistry<>(TEST_REGISTRY_KEY, Lifecycle.stable()));
+	public static final Registry<TestRegistry> TEST_REGISTRY = RegistryRegister.register(new MappedRegistry<>(TEST_REGISTRY_KEY, Lifecycle.stable(), null));
 	
 	public static final DeferredRegister<TestRegistry> TEST_REGISTER = DeferredRegister.create(MOD_ID, TEST_REGISTRY);
 	public static final DeferredObject<TestRegistry> TEST1 = TEST_REGISTER.register("test1", TestRegistry::new);
