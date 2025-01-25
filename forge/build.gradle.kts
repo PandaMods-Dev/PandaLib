@@ -42,3 +42,26 @@ tasks.withType<RemapJarTask> {
 	val shadowJar = tasks.getByName<ShadowJar>("shadowJar")
 	inputFile.set(shadowJar.archiveFile)
 }
+
+publishing {
+	publications {
+		register("mavenJava", MavenPublication::class) {
+			groupId = properties["maven_group"] as String
+			artifactId = "${properties["mod_id"]}-${project.name}"
+			version = "${project.version}-build.${project.findProperty("buildNumber") ?: "-1"}"
+
+			from(components["java"])
+		}
+	}
+
+	repositories {
+		maven {
+			name = "GitHubPackages"
+			url = uri("https://maven.pkg.github.com/PandaMods-Dev/PandaLib")
+			credentials {
+				username = project.findProperty("gpr.user") as String? ?: System.getenv("USERNAME")
+				password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
+			}
+		}
+	}
+}
