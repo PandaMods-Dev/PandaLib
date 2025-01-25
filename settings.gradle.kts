@@ -18,8 +18,6 @@ pluginManagement.repositories {
 	gradlePluginPortal()
 }
 
-include("common")
-settings.extra.properties["supported_mod_loaders"].toString().split(",").forEach {
-	println("Adding loader ${it}")
-	include(it)
-}
+include("common", "common-testmod")
+include("fabric", "fabric-testmod")
+include("forge", "forge-testmod")

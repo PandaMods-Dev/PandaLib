@@ -12,21 +12,21 @@
 
 package me.pandamods.pandalib.networking;
 
-import me.pandamods.pandalib.PandaLib;
+import me.pandamods.pandalib.platform.Services;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
 public class PacketDistributor {
 	public static void sendToServer(ResourceLocation resourceLocation, FriendlyByteBuf byteBuf) {
-		PandaLib.getInstance().packetDistributor.sendToServer(resourceLocation, byteBuf);
+		Services.NETWORK.sendToServer(resourceLocation, byteBuf);
 	}
 
 	public static void sendToPlayer(ServerPlayer player, ResourceLocation resourceLocation, FriendlyByteBuf byteBuf) {
-		PandaLib.getInstance().packetDistributor.sendToPlayer(player, resourceLocation, byteBuf);
+		Services.NETWORK.sendToPlayer(player, resourceLocation, byteBuf);
 	}
 
 	public static void sendToAllPlayers(ResourceLocation resourceLocation, FriendlyByteBuf byteBuf) {
-		PandaLib.getInstance().packetDistributor.sendToAllPlayers(resourceLocation, byteBuf);
+		Services.NETWORK.sendToAllPlayers(resourceLocation, byteBuf);
 	}
 }

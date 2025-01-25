@@ -21,6 +21,7 @@ import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.joml.Math;
 
+@SuppressWarnings("unused")
 public class BlockUtils {
 	public static void translateBlock(BlockState blockState, PoseStack poseStack) {
 		poseStack.translate(0.5f, 0.5f, 0.5f);

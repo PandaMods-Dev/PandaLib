@@ -1,0 +1,25 @@
+modLoader = "javafml"
+loaderVersion = "*"
+license = "${mod_license}"
+
+[[mods]]
+modId = "testmod"
+version = "${mod_version}"
+displayName = "Test Mod"
+authors = "${mod_author}"
+description = "Testing environment for mod development and testing purposes"
+logoFile = "assets/${mod_id}/icon.png"
+
+[[dependencies.testmod]]
+modId = "forge"
+mandatory = true
+versionRange = "*"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.testmod]]
+modId = "minecraft"
+mandatory = true
+versionRange = "${forge_version_range}"
+ordering = "NONE"
+side = "BOTH"

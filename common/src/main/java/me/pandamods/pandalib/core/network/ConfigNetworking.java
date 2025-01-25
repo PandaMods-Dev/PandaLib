@@ -13,14 +13,13 @@
 package me.pandamods.pandalib.core.network;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import io.netty.buffer.Unpooled;
 import me.pandamods.pandalib.config.ConfigData;
 import me.pandamods.pandalib.config.PandaLibConfig;
 import me.pandamods.pandalib.config.holders.ClientConfigHolder;
 import me.pandamods.pandalib.config.holders.CommonConfigHolder;
 import me.pandamods.pandalib.networking.NetworkContext;
-import me.pandamods.pandalib.networking.NetworkingRegistry;
+import me.pandamods.pandalib.networking.NetworkRegistry;
 import me.pandamods.pandalib.networking.PacketDistributor;
 import me.pandamods.pandalib.utils.NBTUtils;
 import net.minecraft.nbt.CompoundTag;
@@ -31,7 +30,7 @@ import net.minecraft.server.level.ServerPlayer;
 public class ConfigNetworking {
 	public static final ResourceLocation PACKET_ID = new ResourceLocation("pandalib", "config_sync");
 
-	public static void registerPackets(NetworkingRegistry registry) {
+	public static void registerPackets(NetworkRegistry registry) {
 		registry.registerBiDirectionalReceiver(PACKET_ID, ConfigNetworking::CommonConfigReceiver, ConfigNetworking::ClientConfigReceiver);
 	}
 

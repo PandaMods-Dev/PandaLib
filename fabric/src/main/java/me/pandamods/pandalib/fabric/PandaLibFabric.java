@@ -14,8 +14,7 @@ package me.pandamods.pandalib.fabric;
 
 import me.pandamods.pandalib.PandaLib;
 import me.pandamods.pandalib.event.events.NetworkingEvents;
-import me.pandamods.pandalib.fabric.networking.NetworkingRegistryImpl;
-import me.pandamods.pandalib.fabric.networking.PacketDistributorImpl;
+import me.pandamods.pandalib.platform.Services;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.server.MinecraftServer;
@@ -27,7 +26,7 @@ public class PandaLibFabric implements ModInitializer {
 	public void onInitialize() {
 		ServerLifecycleEvents.SERVER_STARTED.register(server -> PandaLibFabric.server = server);
 
-		new PandaLib(new PacketDistributorImpl());
-		NetworkingEvents.PACKET_PAYLOAD_REGISTRY.invoker().register(new NetworkingRegistryImpl());
+		new PandaLib();
+		NetworkingEvents.PACKET_PAYLOAD_REGISTRY.invoker().register(Services.NETWORK);
 	}
 }

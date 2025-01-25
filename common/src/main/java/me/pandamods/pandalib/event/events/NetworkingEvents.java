@@ -14,12 +14,12 @@ package me.pandamods.pandalib.event.events;
 
 import dev.architectury.event.Event;
 import dev.architectury.event.EventFactory;
-import me.pandamods.pandalib.networking.NetworkingRegistry;
+import me.pandamods.pandalib.networking.NetworkRegistry;
 
 public interface NetworkingEvents {
 	Event<PacketPayloadRegistry> PACKET_PAYLOAD_REGISTRY = EventFactory.createLoop();
 
 	interface PacketPayloadRegistry {
-		void register(NetworkingRegistry registry);
+		void register(NetworkRegistry registry);
 	}
 }
