@@ -31,8 +31,8 @@ public class PandaLibForge {
     public PandaLibForge() {
 		IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 		EventBuses.registerModEventBus(PandaLib.MOD_ID, eventBus);
-
 		new PandaLib();
+
 		if (Services.REGISTRATION instanceof RegistrationHelperImpl helper) {
 			eventBus.addListener(helper::registerEvent);
 			MinecraftForge.EVENT_BUS.addListener(helper::addReloadListenerEvent);
