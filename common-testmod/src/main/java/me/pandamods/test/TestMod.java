@@ -24,8 +24,13 @@ import me.pandamods.test.config.ClientTestConfig;
 import me.pandamods.test.config.CommonTestConfig;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
 
 public class TestMod {
 	public static final String MOD_ID = "testmod";
@@ -41,9 +46,13 @@ public class TestMod {
 	public static final DeferredObject<TestRegistry> TEST1 = TEST_REGISTER.register("test1", TestRegistry::new);
 	public static final DeferredObject<TestRegistry> TEST2 = TEST_REGISTER.register("test2", TestRegistry::new);
 
+	public static final DeferredRegister<EntityType<?>> TEST_ENTITY_REGISTER = DeferredRegister.create(MOD_ID, Registries.ENTITY_TYPE);
+	public static final DeferredObject<EntityType<?>> TEST3 = TEST_ENTITY_REGISTER.register("test3", () -> EntityType.Builder.createNothing(MobCategory.MISC).build("test3"));
+
 	public TestMod() {
 		instance = this;
 		TEST_REGISTER.register();
+		TEST_ENTITY_REGISTER.register();
 	}
 
 	public static ResourceLocation resourceLocation(String path) {

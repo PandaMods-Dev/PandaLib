@@ -46,7 +46,7 @@ public class RegistrationHelperImpl implements RegistrationHelper {
 		if (BuiltInRegistries.REGISTRY.containsKey(registryName))
 			throw new IllegalStateException("Attempted duplicate registration of registry " + registryName);
 		
-		((WritableRegistry) BuiltInRegistries.REGISTRY).register(registry.key(), registry, Lifecycle.stable());
+		((WritableRegistry) BuiltInRegistries.REGISTRY).register(registry.key(), registry, registry.registryLifecycle());
 	}
 	
 	@Override

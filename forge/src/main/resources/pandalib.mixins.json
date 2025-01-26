@@ -6,7 +6,7 @@
 	"client": [
 	],
 	"mixins": [
-		"NewRegistryEventMixin"
+		"RegistryManagerMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

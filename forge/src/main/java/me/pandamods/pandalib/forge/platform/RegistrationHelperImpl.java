@@ -16,6 +16,8 @@ import com.mojang.serialization.Lifecycle;
 import me.pandamods.pandalib.platform.services.RegistrationHelper;
 import me.pandamods.pandalib.registry.DeferredObject;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.Holder;
+import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.WritableRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -25,7 +27,7 @@ import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.registries.RegisterEvent;
+import net.minecraftforge.registries.*;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -62,11 +64,17 @@ public class RegistrationHelperImpl implements RegistrationHelper {
 		pendingRegistries.values().forEach(pending -> pending.register(event));
 	}
 
-	@SuppressWarnings({"rawtypes", "unchecked"})
+	@SuppressWarnings({"deprecation", "unchecked", "rawtypes"})
 	public void registerNewRegistries() {
-		for (Registry registry : pendingRegistryTypes) {
-			((WritableRegistry) BuiltInRegistries.REGISTRY).register(registry.key(), registry, Lifecycle.stable());
+		if (BuiltInRegistries.REGISTRY instanceof MappedRegistry<?> rootRegistry)
+			rootRegistry.unfreeze();
+
+		for (Registry<?> registry : pendingRegistryTypes) {
+			((WritableRegistry) BuiltInRegistries.REGISTRY).register(registry.key(), registry, registry.registryLifecycle());
 		}
+
+		if (BuiltInRegistries.REGISTRY instanceof MappedRegistry<?> rootRegistry)
+			rootRegistry.freeze();
 	}
 
 	public void addReloadListenerEvent(AddReloadListenerEvent event) {
