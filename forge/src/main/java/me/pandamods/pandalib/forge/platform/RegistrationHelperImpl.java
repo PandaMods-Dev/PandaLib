@@ -69,7 +69,7 @@ public class RegistrationHelperImpl implements RegistrationHelper {
 			rootRegistry.unfreeze();
 
 		for (Registry<?> registry : pendingRegistryTypes) {
-			((WritableRegistry) Registry.REGISTRY).register(registry.key(), registry, registry.registryLifecycle());
+			((WritableRegistry) Registry.REGISTRY).register(registry.key(), registry, registry.lifecycle());
 		}
 
 		if (Registry.REGISTRY instanceof MappedRegistry<?> rootRegistry)
