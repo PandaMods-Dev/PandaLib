@@ -63,17 +63,11 @@ public class RegistrationHelperImpl implements RegistrationHelper {
 		pendingRegistries.values().forEach(pending -> pending.register(event));
 	}
 
-	@SuppressWarnings({"deprecation", "unchecked", "rawtypes"})
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	public void registerNewRegistries() {
-		if (Registry.REGISTRY instanceof MappedRegistry<?> rootRegistry)
-			rootRegistry.unfreeze();
-
 		for (Registry<?> registry : pendingRegistryTypes) {
 			((WritableRegistry) Registry.REGISTRY).register(registry.key(), registry, registry.lifecycle());
 		}
-
-		if (Registry.REGISTRY instanceof MappedRegistry<?> rootRegistry)
-			rootRegistry.freeze();
 	}
 
 	public void addReloadListenerEvent(AddReloadListenerEvent event) {
