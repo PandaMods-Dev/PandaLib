@@ -69,6 +69,9 @@ dependencies {
     api(libs.kotlinx.datetime)
 
     testImplementation(libs.kotlin.test)
+
+    implementation(libs.autoService.annotations)
+    ksp(libs.autoService.ksp)
 }
 
 java {

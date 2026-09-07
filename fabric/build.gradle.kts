@@ -38,6 +38,9 @@ dependencies {
 
     common(project(":common")) { isTransitive = false }
     shadowCommon(project(":common")) { isTransitive = false }
+
+    implementation(libs.autoService.annotations)
+    ksp(libs.autoService.ksp)
 }
 
 java {
