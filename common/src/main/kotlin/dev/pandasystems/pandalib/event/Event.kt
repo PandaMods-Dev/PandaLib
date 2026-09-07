@@ -40,30 +40,65 @@ fun <T, R> event(
 
         override fun subscribe(listener: (context: T) -> R): Subscription {
             listeners += listener
-			logger.infoThrottled(
-				key = "event_subscribed_$name",
-				messageSupplier = { "Listener subscribed to event $name" }
-			)
+            logger.infoThrottled(
+                key = "event_subscribed_$name",
+                messageSupplier = { "Listener subscribed to event $name" }
+            )
 
             val subscribed = AtomicBoolean(true)
             return Subscription {
                 if (subscribed.compareAndSet(true, false)) {
                     listeners -= listener
-					logger.infoThrottled(
-						key = "event_unsubscribed_$name",
-						messageSupplier = { "Listener unsubscribed from event $name" }
-					)
+                    logger.infoThrottled(
+                        key = "event_unsubscribed_$name",
+                        messageSupplier = { "Listener unsubscribed from event $name" }
+                    )
                 }
             }
         }
 
         override fun invoke(context: T): R {
-			logger.infoThrottled(
-				key = "event_invoked_$name",
-				messageSupplier = { "Invoking event $name with context: $context" }
-			)
+            logger.infoThrottled(
+                key = "event_invoked_$name",
+                messageSupplier = { "Invoking event $name with context: $context" }
+            )
             return createInvoker(listeners, context)
         }
+    }
+}
+
+/**
+ * Creates an Event implementation that proxies registration and invocation
+ * directly to a platform modding API (like NeoForge or Fabric).
+ */
+fun <T, R> platformEvent(
+    name: String,
+    onSubscribe: (listener: (context: T) -> R) -> Subscription,
+    onInvoke: (context: T) -> R
+): Event<T, R> = object : Event<T, R> {
+    override val name: String = name
+
+    override fun subscribe(listener: (context: T) -> R): Subscription {
+        val subscription = onSubscribe(listener)
+        logger.infoThrottled(
+            key = "event_subscribed_$name",
+            messageSupplier = { "Listener subscribed to platform event $name" }
+        )
+        return Subscription {
+            subscription.unsubscribe()
+            logger.infoThrottled(
+                key = "event_unsubscribed_$name",
+                messageSupplier = { "Listener unsubscribed from platform event $name" }
+            )
+        }
+    }
+
+    override fun invoke(context: T): R {
+        logger.infoThrottled(
+            key = "event_invoked_$name",
+            messageSupplier = { "Invoking platform event $name with context: $context" }
+        )
+        return onInvoke(context)
     }
 }
 
