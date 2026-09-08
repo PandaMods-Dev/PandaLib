@@ -3,8 +3,6 @@ package dev.pandasystems.pandalib.neoforge.networking
 import com.google.auto.service.AutoService
 import dev.pandasystems.pandalib.core.MinecraftRuntime
 import dev.pandasystems.pandalib.core.RuntimeEnvironment
-import dev.pandasystems.pandalib.core.handles.player.PlayerHandle
-import dev.pandasystems.pandalib.core.handles.player.handle
 import dev.pandasystems.pandalib.core.lifecycles.ServerLifecycle
 import dev.pandasystems.pandalib.networking.*
 import dev.pandasystems.pandalib.registry.DeferredRegistry
@@ -13,6 +11,7 @@ import net.minecraft.network.codec.StreamCodec
 import net.minecraft.resources.Identifier
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.entity.player.Player
 import net.neoforged.neoforge.client.network.ClientPacketDistributor
 import net.neoforged.neoforge.network.PacketDistributor
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent
@@ -32,22 +31,22 @@ class NeoForgeNetworkManager : NetworkManager {
         ClientPacketDistributor.sendToServer(payload(type, value))
     }
 
-    override fun <T> sendToPeer(peer: PlayerHandle, type: PacketType<T>, value: T) {
+    override fun <T> sendToPeer(peer: Player, type: PacketType<T>, value: T) {
         checkRegistered(type, PacketDirection.SERVER_TO_CLIENT)
-        PacketDistributor.sendToPlayer(peer.resolve() as ServerPlayer, payload(type, value))
+        PacketDistributor.sendToPlayer(peer as ServerPlayer, payload(type, value))
     }
 
     override fun <T> broadcast(
         type: PacketType<T>,
         value: T,
-        filter: (PlayerHandle) -> Boolean,
+        filter: (Player) -> Boolean,
     ) {
         checkRegistered(type, PacketDirection.SERVER_TO_CLIENT)
         val currentServer = checkNotNull(server) {
             "broadcast can only be called while a Minecraft server is running."
         }
         currentServer.playerList.players.forEach { player ->
-            val peer = player.handle()
+            val peer = player
             if (filter(peer)) PacketDistributor.sendToPlayer(player, payload(type, value))
         }
     }
@@ -97,7 +96,7 @@ class NeoForgeNetworkManager : NetworkManager {
                     ) { payload, context ->
                         handler.handle(
                             PacketContextImpl(
-                                peer = context.player().handle(),
+                                peer = context.player(),
                                 executor = { task -> context.enqueueWork { task() } },
                                 sender = this,
                                 replyToServer = false
@@ -113,7 +112,7 @@ class NeoForgeNetworkManager : NetworkManager {
                     ) { payload, context ->
                         handler.handle(
                             PacketContextImpl(
-                                peer = context.player().handle(),
+                                peer = context.player(),
                                 executor = { task -> context.enqueueWork { task() } },
                                 sender = this,
                                 replyToServer = true

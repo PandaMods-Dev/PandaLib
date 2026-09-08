@@ -3,8 +3,6 @@ package dev.pandasystems.pandalib.fabric.networking
 import com.google.auto.service.AutoService
 import dev.pandasystems.pandalib.core.MinecraftRuntime
 import dev.pandasystems.pandalib.core.RuntimeEnvironment
-import dev.pandasystems.pandalib.core.handles.player.PlayerHandle
-import dev.pandasystems.pandalib.core.handles.player.handle
 import dev.pandasystems.pandalib.core.lifecycles.ServerLifecycle
 import dev.pandasystems.pandalib.networking.*
 import net.fabricmc.api.EnvType
@@ -15,6 +13,7 @@ import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.resources.Identifier
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.entity.player.Player
 
 @AutoService(NetworkManager::class)
 class FabricNetworkManager : NetworkManager {
@@ -30,22 +29,22 @@ class FabricNetworkManager : NetworkManager {
         ClientPlayNetworking.send(payload(type, value))
     }
 
-    override fun <T> sendToPeer(peer: PlayerHandle, type: PacketType<T>, value: T) {
+    override fun <T> sendToPeer(peer: Player, type: PacketType<T>, value: T) {
         checkRegistered(type, PacketDirection.SERVER_TO_CLIENT)
-        ServerPlayNetworking.send(peer.resolve() as ServerPlayer, payload(type, value))
+        ServerPlayNetworking.send(peer as ServerPlayer, payload(type, value))
     }
 
     override fun <T> broadcast(
         type: PacketType<T>,
         value: T,
-        filter: (PlayerHandle) -> Boolean,
+        filter: (Player) -> Boolean,
     ) {
         checkRegistered(type, PacketDirection.SERVER_TO_CLIENT)
         val currentServer = checkNotNull(server) {
             "broadcast can only be called while a Minecraft server is running."
         }
         currentServer.playerList.players.forEach { player ->
-            val peer = player.handle()
+            val peer = player
             if (filter(peer)) ServerPlayNetworking.send(player, payload(type, value))
         }
     }
@@ -78,7 +77,7 @@ class FabricNetworkManager : NetworkManager {
                 check(ServerPlayNetworking.registerGlobalReceiver(payloadType) { payload, context ->
                     handler.handle(
                         PacketContextImpl(
-                            peer = context.player().handle(),
+                            peer = context.player(),
                             executor = { task -> context.server().execute(task) },
                             sender = this,
                             replyToServer = false,
@@ -96,7 +95,7 @@ class FabricNetworkManager : NetworkManager {
                     check(ClientPlayNetworking.registerGlobalReceiver(payloadType) { payload, context ->
                         handler.handle(
                             PacketContextImpl(
-                                peer = context.player().handle(),
+                                peer = context.player(),
                                 executor = { task -> context.client().execute(task) },
                                 sender = this,
                                 replyToServer = true,
