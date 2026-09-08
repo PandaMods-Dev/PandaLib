@@ -1,5 +1,6 @@
 package dev.pandasystems.pandalib.neoforge.networking
 
+import com.google.auto.service.AutoService
 import dev.pandasystems.pandalib.core.MinecraftRuntime
 import dev.pandasystems.pandalib.core.RuntimeEnvironment
 import dev.pandasystems.pandalib.core.handles.player.PlayerHandle
@@ -16,7 +17,8 @@ import net.neoforged.neoforge.client.network.ClientPacketDistributor
 import net.neoforged.neoforge.network.PacketDistributor
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent
 
-object NeoForgeNetworkManager : NetworkManager {
+@AutoService(NetworkManager::class)
+class NeoForgeNetworkManager : NetworkManager {
     private val packetTypes = mutableMapOf<PacketId, PacketType<*>>()
     private val deferredPacketTypes = DeferredRegistry<PacketType<*>, PacketHandler<*>>()
 

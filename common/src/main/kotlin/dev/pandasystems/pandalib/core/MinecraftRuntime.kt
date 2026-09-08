@@ -1,11 +1,13 @@
 package dev.pandasystems.pandalib.core
 
-interface IMinecraftRuntime {
+import dev.pandasystems.pandalib.core.utils.loadService
+
+interface MinecraftRuntime {
 	val type: RuntimeType
 	val environment: RuntimeEnvironment
-}
 
-object MinecraftRuntime : IMinecraftRuntime by PandaLibMain.instance.minecraftRuntime
+	companion object : MinecraftRuntime by loadService()
+}
 
 enum class RuntimeType {
 	FABRIC,

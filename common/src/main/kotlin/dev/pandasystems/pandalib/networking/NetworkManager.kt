@@ -1,8 +1,7 @@
 package dev.pandasystems.pandalib.networking
 
-import dev.pandasystems.pandalib.core.PandaLibMain
+import dev.pandasystems.pandalib.core.utils.loadService
 
-interface NetworkManager : PacketSender, NetworkRegistrar
-
-val networkManager: NetworkManager
-	get() = PandaLibMain.instance.networkManager
+interface NetworkManager : PacketSender, NetworkRegistrar {
+	companion object : NetworkManager by loadService()
+}

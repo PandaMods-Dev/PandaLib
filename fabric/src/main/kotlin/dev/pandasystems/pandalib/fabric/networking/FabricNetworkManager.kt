@@ -1,5 +1,6 @@
 package dev.pandasystems.pandalib.fabric.networking
 
+import com.google.auto.service.AutoService
 import dev.pandasystems.pandalib.core.MinecraftRuntime
 import dev.pandasystems.pandalib.core.RuntimeEnvironment
 import dev.pandasystems.pandalib.core.handles.player.PlayerHandle
@@ -15,6 +16,7 @@ import net.minecraft.resources.Identifier
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
 
+@AutoService(NetworkManager::class)
 class FabricNetworkManager : NetworkManager {
     private val packetTypes = mutableMapOf<PacketId, PacketType<*>>()
 

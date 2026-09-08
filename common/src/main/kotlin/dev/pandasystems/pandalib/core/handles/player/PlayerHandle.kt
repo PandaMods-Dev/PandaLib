@@ -7,9 +7,6 @@ import dev.pandasystems.pandalib.core.lifecycles.ServerLifecycle
 import net.minecraft.world.entity.player.Player
 import java.util.*
 
-/**
- * Represents a reference to a player.
- */
 class PlayerHandle(
 	val uuid: UUID
 ) {

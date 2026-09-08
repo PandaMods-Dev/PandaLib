@@ -6,9 +6,6 @@ import net.fabricmc.api.ModInitializer
 
 internal class FabricInit : ModInitializer {
     override fun onInitialize() {
-        PandaLibMain(
-            FabricNetworkManager(),
-            FabricRuntime
-        )
+        PandaLibMain()
     }
 }
