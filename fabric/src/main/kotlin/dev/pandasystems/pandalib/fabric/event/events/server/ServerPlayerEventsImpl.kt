@@ -14,7 +14,7 @@ import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents as FabricPlay
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents as FabricConnectionEvents
 import net.minecraft.world.level.Level
 
-@AutoService
+@AutoService(ServerPlayerEvents::class)
 class ServerPlayerEventsImpl : ServerPlayerEvents {
 	override val playerServerJoin: Event<ServerPlayerConnectionEventContext> = FabricConnectionEvents.JOIN.bindEvent(
 		createListener = { subInvoker ->
@@ -63,7 +63,8 @@ class ServerPlayerEventsImpl : ServerPlayerEvents {
 	override val playerBlockBreakBefore: Event<ServerPlayerBlockBreakEventContext> = FabricPlayerBlockBreakEvents.BEFORE.bindEvent(
 		createListener = { subInvoker ->
 			FabricPlayerBlockBreakEvents.Before { level, player, pos, state, entity ->
-				val ctx = subInvoker(ServerPlayerBlockBreakEventContext(level, player.handle(), pos, state, entity))
+				val ctx = ServerPlayerBlockBreakEventContext(level, player.handle(), pos, state, entity)
+				subInvoker(ctx)
 				!ctx.isCanceled
 			}
 		},

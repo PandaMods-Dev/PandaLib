@@ -1,7 +1,6 @@
 package dev.pandasystems.pandalib.core.lifecycles
 
-import dev.pandasystems.pandalib.event.events.server.serverStarted
-import dev.pandasystems.pandalib.event.events.server.serverStopped
+import dev.pandasystems.pandalib.event.events.server.ServerLifecycleEvents
 import net.minecraft.server.MinecraftServer
 
 object ServerLifecycle {
@@ -11,10 +10,10 @@ object ServerLifecycle {
 	internal fun initialize() = Unit
 
 	init {
-		serverStarted.subscribe { context ->
+		ServerLifecycleEvents.started.subscribe { context ->
 			serverInstance = context.server
 		}
-		serverStopped.subscribe { context ->
+		ServerLifecycleEvents.stopped.subscribe { context ->
 			if (serverInstance === context.server)
 				serverInstance = null
 		}

@@ -7,7 +7,7 @@ import dev.pandasystems.pandalib.event.events.server.ServerLifecycleEvents
 import dev.pandasystems.pandalib.fabric.event.bindEvent
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents as FabricServerLifecycleEvents
 
-@AutoService
+@AutoService(ServerLifecycleEvents::class)
 class ServerLifecycleEventsImpl : ServerLifecycleEvents {
 	override val starting: Event<ServerLifecycleEventContext> = FabricServerLifecycleEvents.SERVER_STARTING.bindEvent(
 		createListener = { subInvoker ->

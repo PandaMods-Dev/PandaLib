@@ -8,7 +8,7 @@ import dev.pandasystems.pandalib.neoforge.event.bindEvent
 import net.neoforged.neoforge.common.NeoForge
 import net.neoforged.neoforge.event.tick.ServerTickEvent
 
-@AutoService
+@AutoService(ServerTickEvents::class)
 class ServerTickEventsImpl : ServerTickEvents {
 	override val preServerTick: Event<ServerTickEventContext> = NeoForge.EVENT_BUS.bindEvent(
 		convertToCtx = { ServerTickEventContext(it.server) },

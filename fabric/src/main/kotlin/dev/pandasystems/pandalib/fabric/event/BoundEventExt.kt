@@ -7,16 +7,16 @@ import java.util.concurrent.atomic.AtomicReference
 import net.fabricmc.fabric.api.event.Event as FabricEvent
 
 inline fun <reified E : Any, T> FabricEvent<E>.bindEvent(
-	crossinline createListener: (subInvoker: (ctx: T) -> T) -> E,
+	crossinline createListener: (subInvoker: (ctx: T) -> Unit) -> E,
 	crossinline onInvoke: (ctx: T, eventInvoker: E) -> Unit,
 ): Event<T> = platformEvent(
 	name = E::class.java.simpleName,
 	onSubscribe = { originalListener ->
-		val activeListener = AtomicReference<((T) -> T)?>(originalListener)
+		val activeListener = AtomicReference<((T) -> Unit)?>(originalListener)
 
-		val listenerWrapper: (T) -> T = { ctx ->
+		val listenerWrapper: (T) -> Unit = { ctx ->
 			val current = activeListener.get()
-			if (current != null) current(ctx) else ctx
+			if (current != null) current(ctx)
 		}
 
 		val listener = createListener(listenerWrapper)

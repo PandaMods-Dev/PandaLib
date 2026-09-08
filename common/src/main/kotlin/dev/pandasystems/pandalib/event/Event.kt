@@ -11,7 +11,7 @@ import kotlin.reflect.KProperty
 interface Event<T> : ReadOnlyProperty<Any?, Event<T>> {
     val name: String
 
-    fun subscribe(listener: (context: T) -> T): Subscription
+    fun subscribe(listener: (context: T) -> Unit): Subscription
     operator fun invoke(context: T): T
 
     override fun getValue(thisRef: Any?, property: KProperty<*>): Event<T> = this
@@ -27,12 +27,12 @@ fun interface EventProvider<T> : PropertyDelegateProvider<Any?, Event<T>> {
 
 fun <T> platformEvent(
     name: String,
-    onSubscribe: (listener: (context: T) -> T) -> Subscription,
+    onSubscribe: (listener: (context: T) -> Unit) -> Subscription,
     onInvoke: (context: T) -> T
 ): Event<T> = object : Event<T> {
     override val name: String = name
 
-    override fun subscribe(listener: (context: T) -> T): Subscription {
+    override fun subscribe(listener: (context: T) -> Unit): Subscription {
         val subscription = onSubscribe(listener)
         logger.infoThrottled(
             key = "event_subscribed_$name",
@@ -64,12 +64,12 @@ internal fun <T> internalEvent(
         key = "event_created_$name",
         messageSupplier = { "Created new event named $name" }
     )
-    val listeners = CopyOnWriteArrayList<(context: T) -> T>()
+    val listeners = CopyOnWriteArrayList<(context: T) -> Unit>()
 
     return object : Event<T> {
         override val name: String = name
 
-        override fun subscribe(listener: (context: T) -> T): Subscription {
+        override fun subscribe(listener: (context: T) -> Unit): Subscription {
             listeners += listener
             logger.infoThrottled(
                 key = "event_subscribed_$name",

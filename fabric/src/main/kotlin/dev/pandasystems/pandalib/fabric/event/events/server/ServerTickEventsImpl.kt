@@ -7,7 +7,7 @@ import dev.pandasystems.pandalib.event.events.server.ServerTickEvents
 import dev.pandasystems.pandalib.fabric.event.bindEvent
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents as FabricServerTickEvents
 
-@AutoService
+@AutoService(ServerTickEvents::class)
 class ServerTickEventsImpl : ServerTickEvents {
 	override val preServerTick: Event<ServerTickEventContext> = FabricServerTickEvents.START_SERVER_TICK.bindEvent(
 		createListener = { subInvoker ->

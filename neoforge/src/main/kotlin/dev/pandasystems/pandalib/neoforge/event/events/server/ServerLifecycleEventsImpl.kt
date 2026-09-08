@@ -11,7 +11,7 @@ import net.neoforged.neoforge.event.server.ServerStartingEvent
 import net.neoforged.neoforge.event.server.ServerStoppedEvent
 import net.neoforged.neoforge.event.server.ServerStoppingEvent
 
-@AutoService
+@AutoService(ServerLifecycleEvents::class)
 class ServerLifecycleEventsImpl : ServerLifecycleEvents {
 	override val starting: Event<ServerLifecycleEventContext> = NeoForge.EVENT_BUS.bindEvent(
 		convertToCtx = { ServerLifecycleEventContext(it.server) },

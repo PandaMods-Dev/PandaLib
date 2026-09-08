@@ -13,7 +13,7 @@ import dev.pandasystems.pandalib.neoforge.event.bindEvent
 import net.neoforged.neoforge.common.NeoForge
 import net.neoforged.neoforge.event.entity.player.PlayerEvent
 
-@AutoService
+@AutoService(ServerPlayerEvents::class)
 class ServerPlayerEventsImpl : ServerPlayerEvents {
 	override val playerServerJoin: Event<ServerPlayerConnectionEventContext> = NeoForge.EVENT_BUS.bindEvent(
 		convertToCtx = { ServerPlayerConnectionEventContext(it.entity.handle()) },

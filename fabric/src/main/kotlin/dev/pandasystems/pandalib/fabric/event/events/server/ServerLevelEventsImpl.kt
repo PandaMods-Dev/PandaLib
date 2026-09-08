@@ -8,7 +8,7 @@ import dev.pandasystems.pandalib.fabric.event.bindEvent
 import net.minecraft.server.level.ServerLevel
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLevelEvents as FabricServerLevelEvents
 
-@AutoService
+@AutoService(ServerLevelEvents::class)
 class ServerLevelEventsImpl : ServerLevelEvents {
 	override val levelLoad: Event<ServerLevelEventContext> = FabricServerLevelEvents.LOAD.bindEvent(
 		createListener = { subInvoker ->

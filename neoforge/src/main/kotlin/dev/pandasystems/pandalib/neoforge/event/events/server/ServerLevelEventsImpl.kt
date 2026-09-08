@@ -8,7 +8,7 @@ import dev.pandasystems.pandalib.neoforge.event.bindEvent
 import net.neoforged.neoforge.common.NeoForge
 import net.neoforged.neoforge.event.level.LevelEvent
 
-@AutoService
+@AutoService(ServerLevelEvents::class)
 class ServerLevelEventsImpl : ServerLevelEvents {
 	override val levelLoad: Event<ServerLevelEventContext> = NeoForge.EVENT_BUS.bindEvent(
 		convertToCtx = { ServerLevelEventContext(it.level) },
