@@ -30,7 +30,7 @@ class ServerPlayerEventsImpl : ServerPlayerEvents {
 		convertFromCtx = { PlayerEvent.PlayerRespawnEvent(it.player.resolve()!!, false) }
 	)
 
-	override val playerBlockBreakBefore: Event<ServerPlayerBlockBreakEventContext> by event()
-	override val playerBlockBreakAfter: Event<ServerPlayerBlockBreakEventContext> by event()
-	override val playerBlockBreakCanceled: Event<ServerPlayerBlockBreakEventContext> by event()
+	override val playerBlockBreakBefore: Event<ServerPlayerBlockBreakEventContext> = event()
+	override val playerBlockBreakAfter: Event<ServerPlayerBlockBreakEventContext> = event()
+	override val playerBlockBreakCanceled: Event<ServerPlayerBlockBreakEventContext> = event()
 }

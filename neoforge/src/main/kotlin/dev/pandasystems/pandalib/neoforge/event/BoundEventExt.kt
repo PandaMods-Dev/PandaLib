@@ -11,7 +11,6 @@ inline fun <reified E : NeoForgeEvent, T> IEventBus.bindEvent(
 	crossinline convertToCtx: (E) -> T,
 	crossinline convertFromCtx: (T) -> E
 ): Event<T> = platformEvent(
-	name = E::class.java.simpleName,
 	onSubscribe = { listener ->
 		val consumer = Consumer<E> { e -> listener(convertToCtx(e)) }
 		this.addListener(E::class.java, consumer)

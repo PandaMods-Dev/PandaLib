@@ -10,7 +10,6 @@ inline fun <reified E : Any, T> FabricEvent<E>.bindEvent(
 	crossinline createListener: (subInvoker: (ctx: T) -> Unit) -> E,
 	crossinline onInvoke: (ctx: T, eventInvoker: E) -> Unit,
 ): Event<T> = platformEvent(
-	name = E::class.java.simpleName,
 	onSubscribe = { originalListener ->
 		val activeListener = AtomicReference<((T) -> Unit)?>(originalListener)
 
