@@ -2,7 +2,6 @@ package dev.pandasystems.pandalib.neoforge
 
 import dev.pandasystems.pandalib.core.PandaLibMain
 import dev.pandasystems.pandalib.core.modId
-import dev.pandasystems.pandalib.neoforge.event.EventHandler
 import dev.pandasystems.pandalib.neoforge.networking.NeoForgeNetworkManager
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.fml.common.Mod
@@ -17,7 +16,6 @@ internal class NeoForgeInit(
             NeoForgeRuntime
         )
 
-        EventHandler.init(eventBus)
         eventBus.addListener(NeoForgeNetworkManager::registrationEvent)
     }
 }

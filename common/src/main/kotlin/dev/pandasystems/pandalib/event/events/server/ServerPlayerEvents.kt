@@ -1,20 +1,15 @@
-package dev.pandasystems.pandalib.event.events
+package dev.pandasystems.pandalib.event.events.server
 
 import dev.pandasystems.pandalib.core.handles.player.PlayerHandle
-import dev.pandasystems.pandalib.event.event
-import dev.pandasystems.pandalib.event.eventCancelable
+import dev.pandasystems.pandalib.core.utils.loadService
+import dev.pandasystems.pandalib.event.Event
 import net.minecraft.core.BlockPos
 import net.minecraft.world.level.LevelAccessor
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 
-// --- Connection -------------------------------------------------------------------
 data class ServerPlayerConnectionEventContext(val player: PlayerHandle)
 
-val playerServerJoin by event<ServerPlayerConnectionEventContext>()
-val playerServerLeave by event<ServerPlayerConnectionEventContext>()
-
-// --- Respawn ----------------------------------------------------------------------
 sealed interface ServerPlayerRespawnEventContext {
     val player: PlayerHandle
 
@@ -34,17 +29,24 @@ data class ServerPlayerRespawnEventContextForge(
     override val player: PlayerHandle
 ) : ServerPlayerRespawnEventContext
 
-val playerServerAfterRespawn by event<ServerPlayerRespawnEventContext>()
-
-// --- Block ------------------------------------------------------------------------
 data class ServerPlayerBlockBreakEventContext(
     val level: LevelAccessor,
     val player: PlayerHandle,
     val pos: BlockPos,
     val blockState: BlockState,
-    val blockEntity: BlockEntity?
+    val blockEntity: BlockEntity?,
+    var isCanceled: Boolean = false // Replaces old eventCancelable
 )
 
-val playerBlockBreakBefore by eventCancelable<ServerPlayerBlockBreakEventContext>()
-val playerBlockBreakAfter by event<ServerPlayerBlockBreakEventContext>()
-val playerBlockBreakCanceled by event<ServerPlayerBlockBreakEventContext>()
+interface ServerPlayerEvents {
+    val playerServerJoin: Event<ServerPlayerConnectionEventContext>
+    val playerServerLeave: Event<ServerPlayerConnectionEventContext>
+
+    val playerServerAfterRespawn: Event<ServerPlayerRespawnEventContext>
+
+    val playerBlockBreakBefore: Event<ServerPlayerBlockBreakEventContext>
+    val playerBlockBreakAfter: Event<ServerPlayerBlockBreakEventContext>
+    val playerBlockBreakCanceled: Event<ServerPlayerBlockBreakEventContext>
+
+    companion object : ServerPlayerEvents by loadService()
+}

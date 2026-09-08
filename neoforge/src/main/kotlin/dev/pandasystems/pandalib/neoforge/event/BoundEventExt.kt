@@ -7,14 +7,10 @@ import net.neoforged.bus.api.IEventBus
 import java.util.function.Consumer
 import net.neoforged.bus.api.Event as NeoForgeEvent
 
-/**
- * Binds a common library event strictly to the NeoForge IEventBus.
- */
-inline fun <reified E : NeoForgeEvent, T, R> IEventBus.bindEvent(
+inline fun <reified E : NeoForgeEvent, T> IEventBus.bindEvent(
 	crossinline convertToCtx: (E) -> T,
-	crossinline convertFromCtx: (T) -> E,
-	crossinline supplyReturn: (E) -> R
-): Event<T, R> = platformEvent(
+	crossinline convertFromCtx: (T) -> E
+): Event<T> = platformEvent(
 	name = E::class.java.simpleName,
 	onSubscribe = { listener ->
 		val consumer = Consumer<E> { e -> listener(convertToCtx(e)) }
@@ -23,7 +19,6 @@ inline fun <reified E : NeoForgeEvent, T, R> IEventBus.bindEvent(
 	},
 	onInvoke = { context ->
 		val eventInstance = convertFromCtx(context)
-		val result = this.post(eventInstance) as E
-		supplyReturn(result)
+		convertToCtx(this.post(eventInstance))
 	}
 )

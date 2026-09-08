@@ -7,14 +7,9 @@ import net.minecraft.server.MinecraftServer
 
 data class ServerTickEventContext(val server: MinecraftServer)
 
-@Deprecated("Use ServerTickEvents.preServerTick")
-val preServerTick by event<ServerTickEventContext>()
-@Deprecated("Use ServerTickEvents.postServerTick")
-val postServerTick by event<ServerTickEventContext>()
-
 interface ServerTickEvents {
-	val preServerTick: Event<ServerTickEventContext, Unit>
-	val postServerTick: Event<ServerTickEventContext, Unit>
+	val preServerTick: Event<ServerTickEventContext>
+	val postServerTick: Event<ServerTickEventContext>
 
 	companion object : ServerTickEvents by loadService()
 }
